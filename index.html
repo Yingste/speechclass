@@ -1,0 +1,5784 @@
+<html>
+
+<body style="background-color: lightgrey;" onmouseover="update()">
+
+<head><title>Scouting 2014</title>
+<!-- css styling -->
+<link href="style.css" rel="stylesheet" />
+<link href="bootstrap3.min.css" rel="stylesheet" />
+
+<link href="../font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+<!-- Begining of the ajax code to determine what teams are possible based on match. see the teams.php for more info -->
+<script>
+//declare team num zone variables
+var r1;
+var r2;
+var r3;
+var b1;
+var b2;
+var b3;
+
+//handle the submitting of the match to the php file
+function getteam(str)
+{
+var xmlhttp;
+if (str.length==0)
+  { 
+  document.getElementById("txtHint").innerHTML="";
+  return;
+  }
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    //break apart the string we recieve and apply it to the team zone variables
+r1=xmlhttp.responseText.substring(0,4);
+r2=xmlhttp.responseText.substring(5,9);
+r3=xmlhttp.responseText.substring(10,14);
+b1=xmlhttp.responseText.substring(15,19);
+b2=xmlhttp.responseText.substring(20,24);
+b3=xmlhttp.responseText.substring(25,29);
+robot();
+//handle setting the match to what is in the match field
+localStorage.matchnum = document.getElementById("matchid").value;
+localStorage.zone = document.getElementById("robot").value;
+    }
+  }
+xmlhttp.open("POST","teams.php?q="+str,true);
+xmlhttp.send();
+}
+
+
+</script>
+
+</head>
+
+ 
+<span style="color: white; font-size: 24px">
+
+
+<!-- script to handle what team you track based on zone and the teams.php file -->
+<script>
+function robot()
+{
+	if (document.getElementById("robot").value==1)
+	{
+	document.getElementById("teamid").value = r1;
+	}
+	if (document.getElementById("robot").value==2)
+	{
+	document.getElementById("teamid").value = r2;
+	}
+	if (document.getElementById("robot").value==3)
+	{
+	document.getElementById("teamid").value = r3;
+	}
+	if (document.getElementById("robot").value==4)
+	{
+	document.getElementById("teamid").value = b1;
+	}
+	if (document.getElementById("robot").value==5)
+	{
+	document.getElementById("teamid").value = b2;
+	}
+	if (document.getElementById("robot").value==6)
+	{
+	document.getElementById("teamid").value = b3;
+	}
+}
+</script>
+
+
+<center>
+<!-- update team button incase auto isnt working -->
+<!--<input type="button" onclick="robot();update()" value="Get Team" class="btn btn-default">-->
+
+<!-- Creates the values you want to track -->
+<form method="post" action="form.php">
+
+<div id="fwindc1">
+<center>
+<table>
+<tr>
+		<td style="width:33%"><!-- what zone you scout for. not part of the form -->
+		<label for="robot" class="col-lg-2 control-label">Robot:</label> 
+<select id="robot" onclick="robot()" onchange="getteam(matchid.value)" class="form-control">
+  <option value="1">Red 1</option>
+  <option value="2">Red 2</option>
+  <option value="3">Red 3</option>
+  <option value="4">Blue 1</option>
+  <option value="5">Blue 2</option>
+  <option value="6">Blue 3</option>
+</select></td>
+		<td><label for="matchid" class="col-lg-2 control-label">Match:</label> <input type="number" name="match" autocomplete="off" id="matchid" class="form-control" onchange="getteam(this.value)" onkeyup="getteam(this.value)" /></td>
+		<td><label for="teamid" class="col-lg-2 control-label">Team:</label>  <input type="number" name="team" autocomplete="off" id="teamid" class="form-control" /></td>
+</tr>
+<tr>
+		<td><input type="checkbox" name="dead" hidden /><span style="color: white; font-size: 24px"><!--Died during match--></span> 	</td>
+		<td><input type="checkbox" name="damaged" hidden /><span style="color: white; font-size: 24px"><!--Got Damaged--></span></td>
+		<td><input type="checkbox" name="partsfell" hidden /><span style="color: white; font-size: 24px"><!--Parts Fell Off--></span></td>
+</tr>
+</table>
+</center>
+</div>       
+      
+
+
+
+</center>
+
+<!-- Tele op -->
+<!-- Tele op high goal -->
+<input type="number" value="0" name="highg1_1" hidden id="highg1_1" /> 
+<input type="number" value="0" name="highg1_2" hidden id="highg1_2" /> 
+<input type="number" value="0" name="highg1_3" hidden id="highg1_3" /> 
+<input type="number" value="0" name="highg1_4" hidden id="highg1_4" /> 
+<input type="number" value="0" name="highg1_5" hidden id="highg1_5" /> 
+<input type="number" value="0" name="highg2_1" hidden id="highg2_1" /> 
+<input type="number" value="0" name="highg2_2" hidden id="highg2_2" /> 
+<input type="number" value="0" name="highg2_3" hidden id="highg2_3" /> 
+<input type="number" value="0" name="highg2_4" hidden id="highg2_4" /> 
+<input type="number" value="0" name="highg2_5" hidden id="highg2_5" /> 
+<input type="number" value="0" name="highg3_1" hidden id="highg3_1" /> 
+<input type="number" value="0" name="highg3_2" hidden id="highg3_2" /> 
+<input type="number" value="0" name="highg3_3" hidden id="highg3_3" /> 
+<input type="number" value="0" name="highg3_4" hidden id="highg3_4" /> 
+<input type="number" value="0" name="highg3_5" hidden id="highg3_5" /> 
+<!-- high goal tries tele -->
+<input type="number" value="0" name="highgt1_1" hidden id="highgt1_1" /> 
+<input type="number" value="0" name="highgt1_2" hidden id="highgt1_2" /> 
+<input type="number" value="0" name="highgt1_3" hidden id="highgt1_3" /> 
+<input type="number" value="0" name="highgt1_4" hidden id="highgt1_4" /> 
+<input type="number" value="0" name="highgt1_5" hidden id="highgt1_5" /> 
+<input type="number" value="0" name="highgt2_1" hidden id="highgt2_1" /> 
+<input type="number" value="0" name="highgt2_2" hidden id="highgt2_2" /> 
+<input type="number" value="0" name="highgt2_3" hidden id="highgt2_3" /> 
+<input type="number" value="0" name="highgt2_4" hidden id="highgt2_4" /> 
+<input type="number" value="0" name="highgt2_5" hidden id="highgt2_5" /> 
+<input type="number" value="0" name="highgt3_1" hidden id="highgt3_1" /> 
+<input type="number" value="0" name="highgt3_2" hidden id="highgt3_2" /> 
+<input type="number" value="0" name="highgt3_3" hidden id="highgt3_3" /> 
+<input type="number" value="0" name="highgt3_4" hidden id="highgt3_4" /> 
+<input type="number" value="0" name="highgt3_5" hidden id="highgt3_5" /> 
+
+<!-- defense block tele -->
+<input type="number" value="0" name="dblock1_1" hidden id="dblock1_1" /> 
+<input type="number" value="0" name="dblock1_2" hidden id="dblock1_2" /> 
+<input type="number" value="0" name="dblock1_3" hidden id="dblock1_3" /> 
+<input type="number" value="0" name="dblock1_4" hidden id="dblock1_4" /> 
+<input type="number" value="0" name="dblock1_5" hidden id="dblock1_5" /> 
+<input type="number" value="0" name="dblock2_1" hidden id="dblock2_1" /> 
+<input type="number" value="0" name="dblock2_2" hidden id="dblock2_2" /> 
+<input type="number" value="0" name="dblock2_3" hidden id="dblock2_3" /> 
+<input type="number" value="0" name="dblock2_4" hidden id="dblock2_4" /> 
+<input type="number" value="0" name="dblock2_5" hidden id="dblock2_5" /> 
+<input type="number" value="0" name="dblock3_1" hidden id="dblock3_1" /> 
+<input type="number" value="0" name="dblock3_2" hidden id="dblock3_2" /> 
+<input type="number" value="0" name="dblock3_3" hidden id="dblock3_3" /> 
+<input type="number" value="0" name="dblock3_4" hidden id="dblock3_4" /> 
+<input type="number" value="0" name="dblock3_5" hidden id="dblock3_5" /> 
+
+<!-- good truss -->
+<input type="number" value="0" name="trussg1_1" hidden id="trussg1_1" /> 
+<input type="number" value="0" name="trussg1_2" hidden id="trussg1_2" /> 
+<input type="number" value="0" name="trussg1_3" hidden id="trussg1_3" /> 
+<input type="number" value="0" name="trussg1_4" hidden id="trussg2_4" /> 
+<input type="number" value="0" name="trussg1_5" hidden id="trussg2_5" /> 
+<input type="number" value="0" name="trussg2_1" hidden id="trussg3_1" /> 
+<input type="number" value="0" name="trussg2_2" hidden id="trussg3_2" /> 
+<input type="number" value="0" name="trussg2_3" hidden id="trussg3_3" /> 
+<input type="number" value="0" name="trussg2_4" hidden id="trussg4_4" /> 
+<input type="number" value="0" name="trussg2_5" hidden id="trussg4_5" /> 
+<input type="number" value="0" name="trussg3_1" hidden id="trussg5_1" /> 
+<input type="number" value="0" name="trussg3_2" hidden id="trussg5_2" /> 
+<input type="number" value="0" name="trussg3_3" hidden id="trussg5_3" /> 
+<input type="number" value="0" name="trussg3_4" hidden id="trussg6_4" /> 
+<input type="number" value="0" name="trussg3_5" hidden id="trussg6_5" /> 
+<!-- bad truss -->
+<input type="number" value="0" name="trussb1_1" hidden id="trussb1_1" /> 
+<input type="number" value="0" name="trussb2_1" hidden id="trussb2_1" /> 
+<input type="number" value="0" name="trussb3_1" hidden id="trussb3_1" /> 
+<input type="number" value="0" name="trussb1_2" hidden id="trussb1_2" /> 
+<input type="number" value="0" name="trussb2_2" hidden id="trussb2_2" /> 
+<input type="number" value="0" name="trussb3_2" hidden id="trussb3_2" /> 
+<input type="number" value="0" name="trussb1_3" hidden id="trussb1_3" /> 
+<input type="number" value="0" name="trussb2_3" hidden id="trussb2_3" /> 
+<input type="number" value="0" name="trussb3_3" hidden id="trussb3_3" /> 
+<input type="number" value="0" name="trussb1_4" hidden id="trussb1_4" /> 
+<input type="number" value="0" name="trussb2_4" hidden id="trussb2_4" /> 
+<input type="number" value="0" name="trussb3_4" hidden id="trussb3_4" /> 
+<input type="number" value="0" name="trussb1_5" hidden id="trussb1_5" /> 
+<input type="number" value="0" name="trussb2_5" hidden id="trussb2_5" /> 
+<input type="number" value="0" name="trussb3_5" hidden id="trussb3_5" /> 
+
+<!-- defense hit -->
+<input type="number" value="0" name="dhit1_1" hidden id="dhit1_1" /> 
+<input type="number" value="0" name="dhit2_1" hidden id="dhit2_1" /> 
+<input type="number" value="0" name="dhit3_1" hidden id="dhit3_1" /> 
+<input type="number" value="0" name="dhit1_2" hidden id="dhit1_2" /> 
+<input type="number" value="0" name="dhit2_2" hidden id="dhit2_2" /> 
+<input type="number" value="0" name="dhit3_2" hidden id="dhit3_2" /> 
+<input type="number" value="0" name="dhit1_3" hidden id="dhit1_3" /> 
+<input type="number" value="0" name="dhit2_3" hidden id="dhit2_3" /> 
+<input type="number" value="0" name="dhit3_3" hidden id="dhit3_3" /> 
+<input type="number" value="0" name="dhit1_4" hidden id="dhit1_4" /> 
+<input type="number" value="0" name="dhit2_4" hidden id="dhit2_4" /> 
+<input type="number" value="0" name="dhit3_4" hidden id="dhit3_4" /> 
+<input type="number" value="0" name="dhit1_5" hidden id="dhit1_5" /> 
+<input type="number" value="0" name="dhit2_5" hidden id="dhit2_5" /> 
+<input type="number" value="0" name="dhit3_5" hidden id="dhit3_5" /> 
+
+<!-- short goal score -->
+<input type="number" value="0" name="shortg1_1" hidden id="shortg1_1" /> 
+<input type="number" value="0" name="shortg2_1" hidden id="shortg2_1" /> 
+<input type="number" value="0" name="shortg3_1" hidden id="shortg3_1" /> 
+<input type="number" value="0" name="shortg1_2" hidden id="shortg1_2" /> 
+<input type="number" value="0" name="shortg2_2" hidden id="shortg2_2" /> 
+<input type="number" value="0" name="shortg3_2" hidden id="shortg3_2" /> 
+<input type="number" value="0" name="shortg1_3" hidden id="shortg1_3" /> 
+<input type="number" value="0" name="shortg2_3" hidden id="shortg2_3" /> 
+<input type="number" value="0" name="shortg3_3" hidden id="shortg3_3" /> 
+<input type="number" value="0" name="shortg1_4" hidden id="shortg1_4" /> 
+<input type="number" value="0" name="shortg2_4" hidden id="shortg2_4" /> 
+<input type="number" value="0" name="shortg3_4" hidden id="shortg3_4" /> 
+<input type="number" value="0" name="shortg1_5" hidden id="shortg1_5" /> 
+<input type="number" value="0" name="shortg2_5" hidden id="shortg2_5" /> 
+<input type="number" value="0" name="shortg3_5" hidden id="shortg3_5" /> 
+<!-- Short goal tries -->
+<input type="number" value="0" name="shortgt1_1" hidden id="shortgt1_1" /> 
+<input type="number" value="0" name="shortgt2_1" hidden id="shortgt2_1" /> 
+<input type="number" value="0" name="shortgt3_1" hidden id="shortgt3_1" /> 
+<input type="number" value="0" name="shortgt1_2" hidden id="shortgt1_2" /> 
+<input type="number" value="0" name="shortgt2_2" hidden id="shortgt2_2" /> 
+<input type="number" value="0" name="shortgt3_2" hidden id="shortgt3_2" /> 
+<input type="number" value="0" name="shortgt1_3" hidden id="shortgt1_3" /> 
+<input type="number" value="0" name="shortgt2_3" hidden id="shortgt2_3" /> 
+<input type="number" value="0" name="shortgt3_3" hidden id="shortgt3_3" /> 
+<input type="number" value="0" name="shortgt1_4" hidden id="shortgt1_4" /> 
+<input type="number" value="0" name="shortgt2_4" hidden id="shortgt2_4" /> 
+<input type="number" value="0" name="shortgt3_4" hidden id="shortgt3_4" /> 
+<input type="number" value="0" name="shortgt1_5" hidden id="shortgt1_5" /> 
+<input type="number" value="0" name="shortgt2_5" hidden id="shortgt2_5" /> 
+<input type="number" value="0" name="shortgt3_5" hidden id="shortgt3_5" /> 
+
+<!-- Human load yes -->
+<input type="number" value="0" name="hloady1_1" hidden id="hloady1_1" /> 
+<input type="number" value="0" name="hloady2_1" hidden id="hloady2_1" /> 
+<input type="number" value="0" name="hloady3_1" hidden id="hloady3_1" /> 
+<input type="number" value="0" name="hloady1_2" hidden id="hloady1_2" /> 
+<input type="number" value="0" name="hloady2_2" hidden id="hloady2_2" /> 
+<input type="number" value="0" name="hloady3_2" hidden id="hloady3_2" /> 
+<input type="number" value="0" name="hloady1_3" hidden id="hloady1_3" /> 
+<input type="number" value="0" name="hloady2_3" hidden id="hloady2_3" /> 
+<input type="number" value="0" name="hloady3_3" hidden id="hloady3_3" /> 
+<input type="number" value="0" name="hloady1_4" hidden id="hloady1_4" /> 
+<input type="number" value="0" name="hloady2_4" hidden id="hloady2_4" /> 
+<input type="number" value="0" name="hloady3_4" hidden id="hloady3_4" /> 
+<input type="number" value="0" name="hloady1_5" hidden id="hloady1_5" /> 
+<input type="number" value="0" name="hloady2_5" hidden id="hloady2_5" /> 
+<input type="number" value="0" name="hloady3_5" hidden id="hloady3_5" />
+<!-- Human load no -->
+<input type="number" value="0" name="hloadn1_1" hidden id="hloadn1_1" /> 
+<input type="number" value="0" name="hloadn2_1" hidden id="hloadn2_1" /> 
+<input type="number" value="0" name="hloadn3_1" hidden id="hloadn3_1" /> 
+<input type="number" value="0" name="hloadn1_2" hidden id="hloadn1_2" /> 
+<input type="number" value="0" name="hloadn2_2" hidden id="hloadn2_2" /> 
+<input type="number" value="0" name="hloadn3_2" hidden id="hloadn3_2" /> 
+<input type="number" value="0" name="hloadn1_3" hidden id="hloadn1_3" /> 
+<input type="number" value="0" name="hloadn2_3" hidden id="hloadn2_3" /> 
+<input type="number" value="0" name="hloadn3_3" hidden id="hloadn3_3" /> 
+<input type="number" value="0" name="hloadn1_4" hidden id="hloadn1_4" /> 
+<input type="number" value="0" name="hloadn2_4" hidden id="hloadn2_4" /> 
+<input type="number" value="0" name="hloadn3_4" hidden id="hloadn3_4" /> 
+<input type="number" value="0" name="hloadn1_5" hidden id="hloadn1_5" /> 
+<input type="number" value="0" name="hloadn2_5" hidden id="hloadn2_5" /> 
+<input type="number" value="0" name="hloadn3_5" hidden id="hloadn3_5" />
+
+<!-- Truss to Hp A -->
+<input type="number" value="0" name="trusshpa1_1" hidden id="trusshpa1_1" /> 
+<input type="number" value="0" name="trusshpa2_1" hidden id="trusshpa2_1" /> 
+<input type="number" value="0" name="trusshpa3_1" hidden id="trusshpa3_1" /> 
+<input type="number" value="0" name="trusshpa1_2" hidden id="trusshpa1_2" /> 
+<input type="number" value="0" name="trusshpa2_2" hidden id="trusshpa2_2" /> 
+<input type="number" value="0" name="trusshpa3_2" hidden id="trusshpa3_2" /> 
+<input type="number" value="0" name="trusshpa1_3" hidden id="trusshpa1_3" /> 
+<input type="number" value="0" name="trusshpa2_3" hidden id="trusshpa2_3" /> 
+<input type="number" value="0" name="trusshpa3_3" hidden id="trusshpa3_3" /> 
+<input type="number" value="0" name="trusshpa1_4" hidden id="trusshpa1_4" /> 
+<input type="number" value="0" name="trusshpa2_4" hidden id="trusshpa2_4" /> 
+<input type="number" value="0" name="trusshpa3_4" hidden id="trusshpa3_4" /> 
+<input type="number" value="0" name="trusshpa1_5" hidden id="trusshpa1_5" /> 
+<input type="number" value="0" name="trusshpa2_5" hidden id="trusshpa2_5" /> 
+<input type="number" value="0" name="trusshpa3_5" hidden id="trusshpa3_5" />
+
+<!-- Truss to Hp B -->
+<input type="number" value="0" name="trusshpb1_1" hidden id="trusshpb1_1" /> 
+<input type="number" value="0" name="trusshpb2_1" hidden id="trusshpb2_1" /> 
+<input type="number" value="0" name="trusshpb3_1" hidden id="trusshpb3_1" /> 
+<input type="number" value="0" name="trusshpb1_2" hidden id="trusshpb1_2" /> 
+<input type="number" value="0" name="trusshpb2_2" hidden id="trusshpb2_2" /> 
+<input type="number" value="0" name="trusshpb3_2" hidden id="trusshpb3_2" /> 
+<input type="number" value="0" name="trusshpb1_3" hidden id="trusshpb1_3" /> 
+<input type="number" value="0" name="trusshpb2_3" hidden id="trusshpb2_3" /> 
+<input type="number" value="0" name="trusshpb3_3" hidden id="trusshpb3_3" /> 
+<input type="number" value="0" name="trusshpb1_4" hidden id="trusshpb1_4" /> 
+<input type="number" value="0" name="trusshpb2_4" hidden id="trusshpb2_4" /> 
+<input type="number" value="0" name="trusshpb3_4" hidden id="trusshpb3_4" /> 
+<input type="number" value="0" name="trusshpb1_5" hidden id="trusshpb1_5" /> 
+<input type="number" value="0" name="trusshpb2_5" hidden id="trusshpb2_5" /> 
+<input type="number" value="0" name="trusshpb3_5" hidden id="trusshpb3_5" />
+
+<!-- Assist -->
+<input type="number" value="0" name="assist1_1" hidden id="assist1_1" /> 
+<input type="number" value="0" name="assist2_1" hidden id="assist2_1" /> 
+<input type="number" value="0" name="assist3_1" hidden id="assist3_1" /> 
+<input type="number" value="0" name="assist1_2" hidden id="assist1_2" /> 
+<input type="number" value="0" name="assist2_2" hidden id="assist2_2" /> 
+<input type="number" value="0" name="assist3_2" hidden id="assist3_2" /> 
+<input type="number" value="0" name="assist1_3" hidden id="assist1_3" /> 
+<input type="number" value="0" name="assist2_3" hidden id="assist2_3" /> 
+<input type="number" value="0" name="assist3_3" hidden id="assist3_3" /> 
+<input type="number" value="0" name="assist1_4" hidden id="assist1_4" /> 
+<input type="number" value="0" name="assist2_4" hidden id="assist2_4" /> 
+<input type="number" value="0" name="assist3_4" hidden id="assist3_4" /> 
+<input type="number" value="0" name="assist1_5" hidden id="assist1_5" /> 
+<input type="number" value="0" name="assist2_5" hidden id="assist2_5" /> 
+<input type="number" value="0" name="assist3_5" hidden id="assist3_5" />
+
+
+
+<!-- Autonomous -->
+<!-- High goal auto -->
+<input type="number" value="0" name="autohighg1_1" hidden id="autohighg1_1" /> 
+<input type="number" value="0" name="autohighg2_1" hidden id="autohighg2_1" /> 
+<input type="number" value="0" name="autohighg3_1" hidden id="autohighg3_1" /> 
+<input type="number" value="0" name="autohighg1_2" hidden id="autohighg1_2" /> 
+<input type="number" value="0" name="autohighg2_2" hidden id="autohighg2_2" /> 
+<input type="number" value="0" name="autohighg3_2" hidden id="autohighg3_2" /> 
+<input type="number" value="0" name="autohighg1_3" hidden id="autohighg1_3" /> 
+<input type="number" value="0" name="autohighg2_3" hidden id="autohighg2_3" /> 
+<input type="number" value="0" name="autohighg3_3" hidden id="autohighg3_3" /> 
+<input type="number" value="0" name="autohighg1_4" hidden id="autohighg1_4" /> 
+<input type="number" value="0" name="autohighg2_4" hidden id="autohighg2_4" /> 
+<input type="number" value="0" name="autohighg3_4" hidden id="autohighg3_4" /> 
+<input type="number" value="0" name="autohighg1_5" hidden id="autohighg1_5" /> 
+<input type="number" value="0" name="autohighg2_5" hidden id="autohighg2_5" /> 
+<input type="number" value="0" name="autohighg3_5" hidden id="autohighg3_5" /> 
+<!-- High goal auto miss -->
+<input type="number" value="0" name="autohighgt1_1" hidden id="autohighgt1_1" /> 
+<input type="number" value="0" name="autohighgt2_1" hidden id="autohighgt2_1" /> 
+<input type="number" value="0" name="autohighgt3_1" hidden id="autohighgt3_1" /> 
+<input type="number" value="0" name="autohighgt1_2" hidden id="autohighgt1_2" /> 
+<input type="number" value="0" name="autohighgt2_2" hidden id="autohighgt2_2" /> 
+<input type="number" value="0" name="autohighgt3_2" hidden id="autohighgt3_2" /> 
+<input type="number" value="0" name="autohighgt1_3" hidden id="autohighgt1_3" /> 
+<input type="number" value="0" name="autohighgt2_3" hidden id="autohighgt2_3" /> 
+<input type="number" value="0" name="autohighgt3_3" hidden id="autohighgt3_3" /> 
+<input type="number" value="0" name="autohighgt1_4" hidden id="autohighgt1_4" /> 
+<input type="number" value="0" name="autohighgt2_4" hidden id="autohighgt2_4" /> 
+<input type="number" value="0" name="autohighgt3_4" hidden id="autohighgt3_4" /> 
+<input type="number" value="0" name="autohighgt1_5" hidden id="autohighgt1_5" /> 
+<input type="number" value="0" name="autohighgt2_5" hidden id="autohighgt2_5" /> 
+<input type="number" value="0" name="autohighgt3_5" hidden id="autohighgt3_5" /> 
+
+<!-- Short goal auto -->
+<input type="number" value="0" name="autoshortg1_1" hidden id="autoshortg1_1" /> 
+<input type="number" value="0" name="autoshortg2_1" hidden id="autoshortg2_1" /> 
+<input type="number" value="0" name="autoshortg3_1" hidden id="autoshortg3_1" /> 
+<input type="number" value="0" name="autoshortg1_2" hidden id="autoshortg1_2" /> 
+<input type="number" value="0" name="autoshortg2_2" hidden id="autoshortg2_2" /> 
+<input type="number" value="0" name="autoshortg3_2" hidden id="autoshortg3_2" /> 
+<input type="number" value="0" name="autoshortg1_3" hidden id="autoshortg1_3" /> 
+<input type="number" value="0" name="autoshortg2_3" hidden id="autoshortg2_3" /> 
+<input type="number" value="0" name="autoshortg3_3" hidden id="autoshortg3_3" /> 
+<input type="number" value="0" name="autoshortg1_4" hidden id="autoshortg1_4" /> 
+<input type="number" value="0" name="autoshortg2_4" hidden id="autoshortg2_4" /> 
+<input type="number" value="0" name="autoshortg3_4" hidden id="autoshortg3_4" /> 
+<input type="number" value="0" name="autoshortg1_5" hidden id="autoshortg1_5" /> 
+<input type="number" value="0" name="autoshortg2_5" hidden id="autoshortg2_5" /> 
+<input type="number" value="0" name="autoshortg3_5" hidden id="autoshortg3_5" /> 
+<!-- short goal auto tries -->
+<input type="number" value="0" name="autoshortgt1_1" hidden id="autoshortgt1_1" /> 
+<input type="number" value="0" name="autoshortgt2_1" hidden id="autoshortgt2_1" /> 
+<input type="number" value="0" name="autoshortgt3_1" hidden id="autoshortgt3_1" /> 
+<input type="number" value="0" name="autoshortgt1_2" hidden id="autoshortgt1_2" /> 
+<input type="number" value="0" name="autoshortgt2_2" hidden id="autoshortgt2_2" /> 
+<input type="number" value="0" name="autoshortgt3_2" hidden id="autoshortgt3_2" /> 
+<input type="number" value="0" name="autoshortgt1_3" hidden id="autoshortgt1_3" /> 
+<input type="number" value="0" name="autoshortgt2_3" hidden id="autoshortgt2_3" /> 
+<input type="number" value="0" name="autoshortgt3_3" hidden id="autoshortgt3_3" /> 
+<input type="number" value="0" name="autoshortgt1_4" hidden id="autoshortgt1_4" /> 
+<input type="number" value="0" name="autoshortgt2_4" hidden id="autoshortgt2_4" /> 
+<input type="number" value="0" name="autoshortgt3_4" hidden id="autoshortgt3_4" /> 
+<input type="number" value="0" name="autoshortgt1_5" hidden id="autoshortgt1_5" /> 
+<input type="number" value="0" name="autoshortgt2_5" hidden id="autoshortgt2_5" /> 
+<input type="number" value="0" name="autoshortgt3_5" hidden id="autoshortgt3_5" /> 
+
+<!-- move auto -->
+<input type="number" value="0" name="automove1_1" hidden id="automove1_1" /> 
+<input type="number" value="0" name="automove2_1" hidden id="automove2_1" /> 
+<input type="number" value="0" name="automove3_1" hidden id="automove3_1" /> 
+<input type="number" value="0" name="automove1_2" hidden id="automove1_2" /> 
+<input type="number" value="0" name="automove2_2" hidden id="automove2_2" /> 
+<input type="number" value="0" name="automove3_2" hidden id="automove3_2" /> 
+<input type="number" value="0" name="automove1_3" hidden id="automove1_3" /> 
+<input type="number" value="0" name="automove2_3" hidden id="automove2_3" /> 
+<input type="number" value="0" name="automove3_3" hidden id="automove3_3" /> 
+<input type="number" value="0" name="automove1_4" hidden id="automove1_4" /> 
+<input type="number" value="0" name="automove2_4" hidden id="automove2_4" /> 
+<input type="number" value="0" name="automove3_4" hidden id="automove3_4" /> 
+<input type="number" value="0" name="automove1_5" hidden id="automove1_5" /> 
+<input type="number" value="0" name="automove2_5" hidden id="automove2_5" /> 
+<input type="number" value="0" name="automove3_5" hidden id="automove3_5" /> 
+
+
+<div id="fwindc2">
+<center> 
+<table>
+<tr>
+<td>
+<input type="button" value="Submit" style="font-size:24px" onmouseover"getteam(document.getElementById("matchid").value)" onclick="submit()"  class="btn btn-success" />
+</td>
+<!-- tele op/auto switch -->
+<td>
+<button onclick="auto()" id="buttontele" class="btn btn-danger" type="button" style="DISPLAY: none"><span style="font-size: 24px">Tele Op</span></button>
+<button onclick="tele()" id="buttonauto" class="btn btn-warning" type="button"><span style="font-size: 24px">Autonomous</span></button>
+</td>
+</tr>
+</table>
+<script>
+function tele()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("tabletele").style.display = 'block';
+document.getElementById("buttonauto").style.display='none';
+document.getElementById("buttontele").style.display='block';
+}
+
+function auto()
+{
+document.getElementById("tableauto").style.display = 'block';
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("buttonauto").style.display='block';
+document.getElementById("buttontele").style.display='none';
+}
+</script>
+</center></div>
+
+<!-- comments value this will be hidden because i need to place comments at the bottom of the page   bookmark1 -->
+<input type="text" name="comments" id="comments"  hidden  />
+
+</form>
+
+
+
+ 
+
+<div id="tableauto">
+<center>
+
+<table style="width:935px; height:431px" background="field.jpg">
+<tr>
+  <td onclick="zoneauto1_1()">&nbsp;</td>
+  <td onclick="zoneauto1_2()">&nbsp;</td> 
+  <td onclick="zoneauto1_3()">&nbsp;</td>
+  <td onclick="zoneauto1_3()">&nbsp;</td>
+  <td onclick="zoneauto1_4()">&nbsp;</td>
+  <td onclick="zoneauto1_5()">&nbsp;</td>
+</tr>
+<tr>
+  <td onclick="zoneauto2_1()">&nbsp;</td>
+  <td onclick="zoneauto2_2()">&nbsp;</td> 
+  <td onclick="zoneauto2_3()">&nbsp;</td>
+  <td onclick="zoneauto2_3()">&nbsp;</td>
+  <td onclick="zoneauto2_4()">&nbsp;</td>
+  <td onclick="zoneauto2_5()">&nbsp;</td>
+</tr>
+<tr>
+  <td onclick="zoneauto3_1()">&nbsp;</td>
+  <td onclick="zoneauto3_2()">&nbsp;</td> 
+  <td onclick="zoneauto3_3()">&nbsp;</td>
+  <td onclick="zoneauto3_3()">&nbsp;</td>
+  <td onclick="zoneauto3_4()">&nbsp;</td>
+  <td onclick="zoneauto3_5()">&nbsp;</td>
+</tr>
+</table>
+
+<center>
+</div>
+
+
+<div id="tabletele" style="DISPLAY: none">
+<center>
+A
+<table style="width:935px; height:431px" background="field.jpg">
+<tr>
+  <td onclick="zone1_1()">&nbsp;</td>
+  <td onclick="zone1_2()">&nbsp;</td> 
+  <td onclick="zone1_3()">&nbsp;</td>
+  <td onclick="zone1_3()">&nbsp;</td>
+  <td onclick="zone1_4()">&nbsp;</td>
+  <td onclick="zone1_5()">&nbsp;</td>
+</tr>
+<tr>
+  <td onclick="zone2_1()">&nbsp;</td>
+  <td onclick="zone2_2()">&nbsp;</td> 
+  <td onclick="zone2_3()">&nbsp;</td>
+  <td onclick="zone2_3()">&nbsp;</td>
+  <td onclick="zone2_4()">&nbsp;</td>
+  <td onclick="zone2_5()">&nbsp;</td>
+</tr>
+<tr>
+  <td onclick="zone3_1()">&nbsp;</td>
+  <td onclick="zone3_2()">&nbsp;</td> 
+  <td onclick="zone3_3()">&nbsp;</td>
+  <td onclick="zone3_3()">&nbsp;</td>
+  <td onclick="zone3_4()">&nbsp;</td>
+  <td onclick="zone3_5()">&nbsp;</td>
+</tr>
+</table>
+B
+<center>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- auto zones -->
+<script>
+function zoneauto1_1()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone1_1").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto1_2()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone1_2").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto1_3()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone1_3").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto1_4()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone1_4").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto1_5()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone1_5").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+
+function zoneauto2_1()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone2_1").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto2_2()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone2_2").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto2_3()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone2_3").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto2_4()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone2_4").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto2_5()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone2_5").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+
+function zoneauto3_1()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone3_1").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto3_2()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone3_2").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto3_3()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone3_3").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto3_4()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone3_4").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zoneauto3_5()
+{
+document.getElementById("tableauto").style.display = 'none';
+document.getElementById("autozone3_5").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+</script>
+
+
+<!-- return to auto map -->
+<script>
+function backauto()
+{
+document.getElementById("autozone1_1").style.display = 'none';
+document.getElementById("autozone1_2").style.display = 'none';
+document.getElementById("autozone1_3").style.display = 'none';
+document.getElementById("autozone1_4").style.display = 'none';
+document.getElementById("autozone1_5").style.display = 'none';
+document.getElementById("autozone2_1").style.display = 'none';
+document.getElementById("autozone2_2").style.display = 'none';
+document.getElementById("autozone2_3").style.display = 'none';
+document.getElementById("autozone2_4").style.display = 'none';
+document.getElementById("autozone2_5").style.display = 'none';
+document.getElementById("autozone3_1").style.display = 'none';
+document.getElementById("autozone3_2").style.display = 'none';
+document.getElementById("autozone3_3").style.display = 'none';
+document.getElementById("autozone3_4").style.display = 'none';
+document.getElementById("autozone3_5").style.display = 'none';
+document.getElementById("tableauto").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'block';
+document.getElementById("fwindc2").style.display = 'block';
+}
+</script>
+<!-- autonoumous zone tables -->
+
+
+
+<!-- tele map -->
+
+<script>
+function zone1_1()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone1_1").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone1_2()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone1_2").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone1_3()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone1_3").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone1_4()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone1_4").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone1_5()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone1_5").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+
+function zone2_1()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone2_1").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone2_2()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone2_2").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone2_3()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone2_3").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone2_4()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone2_4").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone2_5()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone2_5").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone3_1()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone3_1").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone3_2()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone3_2").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone3_3()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone3_3").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone3_4()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone3_4").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+function zone3_5()
+{
+document.getElementById("tabletele").style.display = 'none';
+document.getElementById("zone3_5").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'none';
+document.getElementById("fwindc2").style.display = 'none';
+}
+
+
+</script>
+
+<!-- return to tele map -->
+<script>
+function backtele()
+{
+document.getElementById("zone1_1").style.display = 'none';
+document.getElementById("zone1_2").style.display = 'none';
+document.getElementById("zone1_3").style.display = 'none';
+document.getElementById("zone1_4").style.display = 'none';
+document.getElementById("zone1_5").style.display = 'none';
+document.getElementById("zone2_1").style.display = 'none';
+document.getElementById("zone2_2").style.display = 'none';
+document.getElementById("zone2_3").style.display = 'none';
+document.getElementById("zone2_4").style.display = 'none';
+document.getElementById("zone2_5").style.display = 'none';
+document.getElementById("zone3_1").style.display = 'none';
+document.getElementById("zone3_2").style.display = 'none';
+document.getElementById("zone3_3").style.display = 'none';
+document.getElementById("zone3_4").style.display = 'none';
+document.getElementById("zone3_5").style.display = 'none';
+document.getElementById("tabletele").style.display = 'block';
+document.getElementById("fwindc1").style.display = 'block';
+document.getElementById("fwindc2").style.display = 'block';
+}
+</script>
+
+<!-- teleop zone tables and button commands -->
+
+<!-- zone 1_1 -->
+<div class="container" id="zone1_1" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-1</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg1_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt1_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa1_1()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb1_1()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg1_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb1_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady1_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn1_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg1_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt1_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock1_1()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit1_1()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist1_1()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 1_1 -->
+<script>
+function highg1_1()
+{
+document.forms[0]['highg1_1'].value = parseInt(document.forms[0]['highg1_1'].value) + 1 ;
+document.forms[0]['highgt1_1'].value = parseInt(document.forms[0]['highgt1_1'].value) + 1 ;
+backtele();
+}
+
+function highgt1_1()
+{
+document.forms[0]['highgt1_1'].value = parseInt(document.forms[0]['highgt1_1'].value) + 1 ;
+backtele();
+}
+
+function shortg1_1()
+{
+document.forms[0]['shortg1_1'].value = parseInt(document.forms[0]['shortg1_1'].value) + 1 ;
+document.forms[0]['shortgt1_1'].value = parseInt(document.forms[0]['shortgt1_1'].value) + 1 ;
+backtele();
+}
+
+function shortgt1_1()
+{
+document.forms[0]['shortgt1_1'].value = parseInt(document.forms[0]['shortgt1_1'].value) + 1 ;
+backtele();
+}
+function trussg1_1()
+{
+document.forms[0]['trussg1_1'].value = parseInt(document.forms[0]['trussg1_1'].value) + 1 ;
+backtele();
+}
+
+function trussb1_1()
+{
+document.forms[0]['trussb1_1'].value = parseInt(document.forms[0]['trussb1_1'].value) + 1 ;
+backtele();
+}
+
+function trusshpa1_1()
+{
+document.forms[0]['trusshpa1_1'].value = parseInt(document.forms[0]['trusshpa1_1'].value) + 1 ;
+backtele();
+}
+
+function trusshpb1_1()
+{
+document.forms[0]['trusshpb1_1'].value = parseInt(document.forms[0]['trusshpb1_1'].value) + 1 ;
+backtele();
+}
+
+function hloady1_1()
+{
+document.forms[0]['hloady1_1'].value = parseInt(document.forms[0]['hloady1_1'].value) + 1 ;
+backtele();
+}
+
+function hloadn1_1()
+{
+document.forms[0]['hloadn1_1'].value = parseInt(document.forms[0]['hloadn1_1'].value) + 1 ;
+backtele();
+}
+
+function dblock1_1()
+{
+document.forms[0]['dblock1_1'].value = parseInt(document.forms[0]['dblock1_1'].value) + 1 ;
+backtele();
+}
+
+function dhit1_1()
+{
+document.forms[0]['dhit1_1'].value = parseInt(document.forms[0]['dhit1_1'].value) + 1 ;
+backtele();
+}
+
+function assist1_1()
+{
+document.forms[0]['assist1_1'].value = parseInt(document.forms[0]['assist1_1'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 1_2 -->
+<div class="container" id="zone1_2" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-2</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg1_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt1_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa1_2()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb1_2()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg1_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb1_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady1_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn1_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg1_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt1_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock1_2()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit1_2()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist1_2()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 1_2 -->
+<script>
+function highg1_2()
+{
+document.forms[0]['highg1_2'].value = parseInt(document.forms[0]['highg1_2'].value) + 1 ;
+document.forms[0]['highgt1_2'].value = parseInt(document.forms[0]['highgt1_2'].value) + 1 ;
+backtele();
+}
+
+function highgt1_2()
+{
+document.forms[0]['highgt1_2'].value = parseInt(document.forms[0]['highgt1_2'].value) + 1 ;
+backtele();
+}
+
+function shortg1_2()
+{
+document.forms[0]['shortg1_2'].value = parseInt(document.forms[0]['shortg1_2'].value) + 1 ;
+document.forms[0]['shortgt1_2'].value = parseInt(document.forms[0]['shortgt1_2'].value) + 1 ;
+backtele();
+}
+
+function shortgt1_2()
+{
+document.forms[0]['shortgt1_2'].value = parseInt(document.forms[0]['shortgt1_2'].value) + 1 ;
+backtele();
+}
+function trussg1_2()
+{
+document.forms[0]['trussg1_2'].value = parseInt(document.forms[0]['trussg1_2'].value) + 1 ;
+backtele();
+}
+
+function trussb1_2()
+{
+document.forms[0]['trussb1_2'].value = parseInt(document.forms[0]['trussb1_2'].value) + 1 ;
+backtele();
+}
+
+function trusshpa1_2()
+{
+document.forms[0]['trusshpa1_2'].value = parseInt(document.forms[0]['trusshpa1_2'].value) + 1 ;
+backtele();
+}
+
+function trusshpb1_2()
+{
+document.forms[0]['trusshpb1_2'].value = parseInt(document.forms[0]['trusshpb1_2'].value) + 1 ;
+backtele();
+}
+
+function hloady1_2()
+{
+document.forms[0]['hloady1_2'].value = parseInt(document.forms[0]['hloady1_2'].value) + 1 ;
+backtele();
+}
+
+function hloadn1_2()
+{
+document.forms[0]['hloadn1_2'].value = parseInt(document.forms[0]['hloadn1_2'].value) + 1 ;
+backtele();
+}
+
+function dblock1_2()
+{
+document.forms[0]['dblock1_2'].value = parseInt(document.forms[0]['dblock1_2'].value) + 1 ;
+backtele();
+}
+
+function dhit1_2()
+{
+document.forms[0]['dhit1_2'].value = parseInt(document.forms[0]['dhit1_2'].value) + 1 ;
+backtele();
+}
+
+function assist1_2()
+{
+document.forms[0]['assist1_2'].value = parseInt(document.forms[0]['assist1_2'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 1_3 -->
+<div class="container" id="zone1_3" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-3</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg1_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt1_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa1_3()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb1_3()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg1_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb1_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady1_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn1_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg1_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt1_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock1_3()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit1_3()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist1_3()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 1_3 -->
+<script>
+function highg1_3()
+{
+document.forms[0]['highg1_3'].value = parseInt(document.forms[0]['highg1_3'].value) + 1 ;
+document.forms[0]['highgt1_3'].value = parseInt(document.forms[0]['highgt1_3'].value) + 1 ;
+backtele();
+}
+
+function highgt1_3()
+{
+document.forms[0]['highgt1_3'].value = parseInt(document.forms[0]['highgt1_3'].value) + 1 ;
+backtele();
+}
+
+function shortg1_3()
+{
+document.forms[0]['shortg1_3'].value = parseInt(document.forms[0]['shortg1_3'].value) + 1 ;
+document.forms[0]['shortgt1_3'].value = parseInt(document.forms[0]['shortgt1_3'].value) + 1 ;
+backtele();
+}
+
+function shortgt1_3()
+{
+document.forms[0]['shortgt1_3'].value = parseInt(document.forms[0]['shortgt1_3'].value) + 1 ;
+backtele();
+}
+function trussg1_3()
+{
+document.forms[0]['trussg1_3'].value = parseInt(document.forms[0]['trussg1_3'].value) + 1 ;
+backtele();
+}
+
+function trussb1_3()
+{
+document.forms[0]['trussb1_3'].value = parseInt(document.forms[0]['trussb1_3'].value) + 1 ;
+backtele();
+}
+
+function trusshpa1_3()
+{
+document.forms[0]['trusshpa1_3'].value = parseInt(document.forms[0]['trusshpa1_3'].value) + 1 ;
+backtele();
+}
+
+function trusshpb1_3()
+{
+document.forms[0]['trusshpb1_3'].value = parseInt(document.forms[0]['trusshpb1_3'].value) + 1 ;
+backtele();
+}
+
+function hloady1_3()
+{
+document.forms[0]['hloady1_3'].value = parseInt(document.forms[0]['hloady1_3'].value) + 1 ;
+backtele();
+}
+
+function hloadn1_3()
+{
+document.forms[0]['hloadn1_3'].value = parseInt(document.forms[0]['hloadn1_3'].value) + 1 ;
+backtele();
+}
+
+function dblock1_3()
+{
+document.forms[0]['dblock1_3'].value = parseInt(document.forms[0]['dblock1_3'].value) + 1 ;
+backtele();
+}
+
+function dhit1_3()
+{
+document.forms[0]['dhit1_3'].value = parseInt(document.forms[0]['dhit1_3'].value) + 1 ;
+backtele();
+}
+
+function assist1_3()
+{
+document.forms[0]['assist1_3'].value = parseInt(document.forms[0]['assist1_3'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 1_4 -->
+<div class="container" id="zone1_4" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times fa-spin"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-4</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg1_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt1_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa1_4()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb1_4()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg1_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb1_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady1_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn1_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg1_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt1_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock1_4()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit1_4()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist1_4()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 1_4 -->
+<script>
+function highg1_4()
+{
+document.forms[0]['highg1_4'].value = parseInt(document.forms[0]['highg1_4'].value) + 1 ;
+document.forms[0]['highgt1_4'].value = parseInt(document.forms[0]['highgt1_4'].value) + 1 ;
+backtele();
+}
+
+function highgt1_4()
+{
+document.forms[0]['highgt1_4'].value = parseInt(document.forms[0]['highgt1_4'].value) + 1 ;
+backtele();
+}
+
+function shortg1_4()
+{
+document.forms[0]['shortg1_4'].value = parseInt(document.forms[0]['shortg1_4'].value) + 1 ;
+document.forms[0]['shortgt1_4'].value = parseInt(document.forms[0]['shortgt1_4'].value) + 1 ;
+backtele();
+}
+
+function shortgt1_4()
+{
+document.forms[0]['shortgt1_4'].value = parseInt(document.forms[0]['shortgt1_4'].value) + 1 ;
+backtele();
+}
+function trussg1_4()
+{
+document.forms[0]['trussg1_4'].value = parseInt(document.forms[0]['trussg1_4'].value) + 1 ;
+backtele();
+}
+
+function trussb1_4()
+{
+document.forms[0]['trussb1_4'].value = parseInt(document.forms[0]['trussb1_4'].value) + 1 ;
+backtele();
+}
+
+function trusshpa1_4()
+{
+document.forms[0]['trusshpa1_4'].value = parseInt(document.forms[0]['trusshpa1_4'].value) + 1 ;
+backtele();
+}
+
+function trusshpb1_4()
+{
+document.forms[0]['trusshpb1_4'].value = parseInt(document.forms[0]['trusshpb1_4'].value) + 1 ;
+backtele();
+}
+
+function hloady1_4()
+{
+document.forms[0]['hloady1_4'].value = parseInt(document.forms[0]['hloady1_4'].value) + 1 ;
+backtele();
+}
+
+function hloadn1_4()
+{
+document.forms[0]['hloadn1_4'].value = parseInt(document.forms[0]['hloadn1_4'].value) + 1 ;
+backtele();
+}
+
+function dblock1_4()
+{
+document.forms[0]['dblock1_4'].value = parseInt(document.forms[0]['dblock1_4'].value) + 1 ;
+backtele();
+}
+
+function dhit1_4()
+{
+document.forms[0]['dhit1_4'].value = parseInt(document.forms[0]['dhit1_4'].value) + 1 ;
+backtele();
+}
+
+function assist1_4()
+{
+document.forms[0]['assist1_4'].value = parseInt(document.forms[0]['assist1_4'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 1_5 -->
+<div class="container" id="zone1_5" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-5</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg1_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt1_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa1_5()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb1_5()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg1_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb1_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady1_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn1_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg1_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt1_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock1_5()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit1_5()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist1_5()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 1_5 -->
+<script>
+function highg1_5()
+{
+document.forms[0]['highg1_5'].value = parseInt(document.forms[0]['highg1_5'].value) + 1 ;
+document.forms[0]['highgt1_5'].value = parseInt(document.forms[0]['highgt1_5'].value) + 1 ;
+backtele();
+}
+
+function highgt1_5()
+{
+document.forms[0]['highgt1_5'].value = parseInt(document.forms[0]['highgt1_5'].value) + 1 ;
+backtele();
+}
+
+function shortg1_5()
+{
+document.forms[0]['shortg1_5'].value = parseInt(document.forms[0]['shortg1_5'].value) + 1 ;
+document.forms[0]['shortgt1_5'].value = parseInt(document.forms[0]['shortgt1_5'].value) + 1 ;
+backtele();
+}
+
+function shortgt1_5()
+{
+document.forms[0]['shortgt1_5'].value = parseInt(document.forms[0]['shortgt1_5'].value) + 1 ;
+backtele();
+}
+function trussg1_5()
+{
+document.forms[0]['trussg1_5'].value = parseInt(document.forms[0]['trussg1_5'].value) + 1 ;
+backtele();
+}
+
+function trussb1_5()
+{
+document.forms[0]['trussb1_5'].value = parseInt(document.forms[0]['trussb1_5'].value) + 1 ;
+backtele();
+}
+
+function trusshpa1_5()
+{
+document.forms[0]['trusshpa1_5'].value = parseInt(document.forms[0]['trusshpa1_5'].value) + 1 ;
+backtele();
+}
+
+function trusshpb1_5()
+{
+document.forms[0]['trusshpb1_5'].value = parseInt(document.forms[0]['trusshpb1_5'].value) + 1 ;
+backtele();
+}
+
+function hloady1_5()
+{
+document.forms[0]['hloady1_5'].value = parseInt(document.forms[0]['hloady1_5'].value) + 1 ;
+backtele();
+}
+
+function hloadn1_5()
+{
+document.forms[0]['hloadn1_5'].value = parseInt(document.forms[0]['hloadn1_5'].value) + 1 ;
+backtele();
+}
+
+function dblock1_5()
+{
+document.forms[0]['dblock1_5'].value = parseInt(document.forms[0]['dblock1_5'].value) + 1 ;
+backtele();
+}
+
+function dhit1_5()
+{
+document.forms[0]['dhit1_5'].value = parseInt(document.forms[0]['dhit1_5'].value) + 1 ;
+backtele();
+}
+
+function assist1_5()
+{
+document.forms[0]['assist1_5'].value = parseInt(document.forms[0]['assist1_5'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 1_6 -->
+<div class="container" id="zone1_6" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-6</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg1_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt1_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa1_6()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb1_6()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg1_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb1_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady1_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn1_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg1_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt1_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock1_6()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit1_6()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist1_6()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 1_6 -->
+<script>
+function highg1_6()
+{
+document.forms[0]['highg1_6'].value = parseInt(document.forms[0]['highg1_6'].value) + 1 ;
+document.forms[0]['highgt1_6'].value = parseInt(document.forms[0]['highgt1_6'].value) + 1 ;
+backtele();
+}
+
+function highgt1_6()
+{
+document.forms[0]['highgt1_6'].value = parseInt(document.forms[0]['highgt1_6'].value) + 1 ;
+backtele();
+}
+
+function shortg1_6()
+{
+document.forms[0]['shortg1_6'].value = parseInt(document.forms[0]['shortg1_6'].value) + 1 ;
+document.forms[0]['shortgt1_6'].value = parseInt(document.forms[0]['shortgt1_6'].value) + 1 ;
+backtele();
+}
+
+function shortgt1_6()
+{
+document.forms[0]['shortgt1_6'].value = parseInt(document.forms[0]['shortgt1_6'].value) + 1 ;
+backtele();
+}
+function trussg1_6()
+{
+document.forms[0]['trussg1_6'].value = parseInt(document.forms[0]['trussg1_6'].value) + 1 ;
+backtele();
+}
+
+function trussb1_6()
+{
+document.forms[0]['trussb1_6'].value = parseInt(document.forms[0]['trussb1_6'].value) + 1 ;
+backtele();
+}
+
+function trusshpa1_6()
+{
+document.forms[0]['trusshpa1_6'].value = parseInt(document.forms[0]['trusshpa1_6'].value) + 1 ;
+backtele();
+}
+
+function trusshpb1_6()
+{
+document.forms[0]['trusshpb1_6'].value = parseInt(document.forms[0]['trusshpb1_6'].value) + 1 ;
+backtele();
+}
+
+function hloady1_6()
+{
+document.forms[0]['hloady1_6'].value = parseInt(document.forms[0]['hloady1_6'].value) + 1 ;
+backtele();
+}
+
+function hloadn1_6()
+{
+document.forms[0]['hloadn1_6'].value = parseInt(document.forms[0]['hloadn1_6'].value) + 1 ;
+backtele();
+}
+
+function dblock1_6()
+{
+document.forms[0]['dblock1_6'].value = parseInt(document.forms[0]['dblock1_6'].value) + 1 ;
+backtele();
+}
+
+function dhit1_6()
+{
+document.forms[0]['dhit1_6'].value = parseInt(document.forms[0]['dhit1_6'].value) + 1 ;
+backtele();
+}
+
+function assist1_6()
+{
+document.forms[0]['assist1_6'].value = parseInt(document.forms[0]['assist1_6'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 2_1 -->
+<div class="container" id="zone2_1" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-1</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg2_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt2_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa2_1()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb2_1()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg2_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb2_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady2_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn2_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg2_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt2_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock2_1()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit2_1()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist2_1()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 2_1 -->
+<script>
+function highg2_1()
+{
+document.forms[0]['highg2_1'].value = parseInt(document.forms[0]['highg2_1'].value) + 1 ;
+document.forms[0]['highgt2_1'].value = parseInt(document.forms[0]['highgt2_1'].value) + 1 ;
+backtele();
+}
+
+function highgt2_1()
+{
+document.forms[0]['highgt2_1'].value = parseInt(document.forms[0]['highgt2_1'].value) + 1 ;
+backtele();
+}
+
+function shortg2_1()
+{
+document.forms[0]['shortg2_1'].value = parseInt(document.forms[0]['shortg2_1'].value) + 1 ;
+document.forms[0]['shortgt2_1'].value = parseInt(document.forms[0]['shortgt2_1'].value) + 1 ;
+backtele();
+}
+
+function shortgt2_1()
+{
+document.forms[0]['shortgt2_1'].value = parseInt(document.forms[0]['shortgt2_1'].value) + 1 ;
+backtele();
+}
+function trussg2_1()
+{
+document.forms[0]['trussg2_1'].value = parseInt(document.forms[0]['trussg2_1'].value) + 1 ;
+backtele();
+}
+
+function trussb2_1()
+{
+document.forms[0]['trussb2_1'].value = parseInt(document.forms[0]['trussb2_1'].value) + 1 ;
+backtele();
+}
+
+function trusshpa2_1()
+{
+document.forms[0]['trusshpa2_1'].value = parseInt(document.forms[0]['trusshpa2_1'].value) + 1 ;
+backtele();
+}
+
+function trusshpb2_1()
+{
+document.forms[0]['trusshpb2_1'].value = parseInt(document.forms[0]['trusshpb2_1'].value) + 1 ;
+backtele();
+}
+
+function hloady2_1()
+{
+document.forms[0]['hloady2_1'].value = parseInt(document.forms[0]['hloady2_1'].value) + 1 ;
+backtele();
+}
+
+function hloadn2_1()
+{
+document.forms[0]['hloadn2_1'].value = parseInt(document.forms[0]['hloadn2_1'].value) + 1 ;
+backtele();
+}
+
+function dblock2_1()
+{
+document.forms[0]['dblock2_1'].value = parseInt(document.forms[0]['dblock2_1'].value) + 1 ;
+backtele();
+}
+
+function dhit2_1()
+{
+document.forms[0]['dhit2_1'].value = parseInt(document.forms[0]['dhit2_1'].value) + 1 ;
+backtele();
+}
+
+function assist2_1()
+{
+document.forms[0]['assist2_1'].value = parseInt(document.forms[0]['assist2_1'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 2_2 -->
+<div class="container" id="zone2_2" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-2</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg2_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt2_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa2_2()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb2_2()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg2_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb2_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady2_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn2_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg2_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt2_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock2_2()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit2_2()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist2_2()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 2_2 -->
+<script>
+function highg2_2()
+{
+document.forms[0]['highg2_2'].value = parseInt(document.forms[0]['highg2_2'].value) + 1 ;
+document.forms[0]['highgt2_2'].value = parseInt(document.forms[0]['highgt2_2'].value) + 1 ;
+backtele();
+}
+
+function highgt2_2()
+{
+document.forms[0]['highgt2_2'].value = parseInt(document.forms[0]['highgt2_2'].value) + 1 ;
+backtele();
+}
+
+function shortg2_2()
+{
+document.forms[0]['shortg2_2'].value = parseInt(document.forms[0]['shortg2_2'].value) + 1 ;
+document.forms[0]['shortgt2_2'].value = parseInt(document.forms[0]['shortgt2_2'].value) + 1 ;
+backtele();
+}
+
+function shortgt2_2()
+{
+document.forms[0]['shortgt2_2'].value = parseInt(document.forms[0]['shortgt2_2'].value) + 1 ;
+backtele();
+}
+function trussg2_2()
+{
+document.forms[0]['trussg2_2'].value = parseInt(document.forms[0]['trussg2_2'].value) + 1 ;
+backtele();
+}
+
+function trussb2_2()
+{
+document.forms[0]['trussb2_2'].value = parseInt(document.forms[0]['trussb2_2'].value) + 1 ;
+backtele();
+}
+
+function trusshpa2_2()
+{
+document.forms[0]['trusshpa2_2'].value = parseInt(document.forms[0]['trusshpa2_2'].value) + 1 ;
+backtele();
+}
+
+function trusshpb2_2()
+{
+document.forms[0]['trusshpb2_2'].value = parseInt(document.forms[0]['trusshpb2_2'].value) + 1 ;
+backtele();
+}
+
+function hloady2_2()
+{
+document.forms[0]['hloady2_2'].value = parseInt(document.forms[0]['hloady2_2'].value) + 1 ;
+backtele();
+}
+
+function hloadn2_2()
+{
+document.forms[0]['hloadn2_2'].value = parseInt(document.forms[0]['hloadn2_2'].value) + 1 ;
+backtele();
+}
+
+function dblock2_2()
+{
+document.forms[0]['dblock2_2'].value = parseInt(document.forms[0]['dblock2_2'].value) + 1 ;
+backtele();
+}
+
+function dhit2_2()
+{
+document.forms[0]['dhit2_2'].value = parseInt(document.forms[0]['dhit2_2'].value) + 1 ;
+backtele();
+}
+
+function assist2_2()
+{
+document.forms[0]['assist2_2'].value = parseInt(document.forms[0]['assist2_2'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 2_3 -->
+<div class="container" id="zone2_3" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-3</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg2_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt2_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa2_3()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb2_3()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg2_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb2_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady2_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn2_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg2_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt2_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock2_3()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit2_3()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist2_3()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 2_3 -->
+<script>
+function highg2_3()
+{
+document.forms[0]['highg2_3'].value = parseInt(document.forms[0]['highg2_3'].value) + 1 ;
+document.forms[0]['highgt2_3'].value = parseInt(document.forms[0]['highgt2_3'].value) + 1 ;
+backtele();
+}
+
+function highgt2_3()
+{
+document.forms[0]['highgt2_3'].value = parseInt(document.forms[0]['highgt2_3'].value) + 1 ;
+backtele();
+}
+
+function shortg2_3()
+{
+document.forms[0]['shortg2_3'].value = parseInt(document.forms[0]['shortg2_3'].value) + 1 ;
+document.forms[0]['shortgt2_3'].value = parseInt(document.forms[0]['shortgt2_3'].value) + 1 ;
+backtele();
+}
+
+function shortgt2_3()
+{
+document.forms[0]['shortgt2_3'].value = parseInt(document.forms[0]['shortgt2_3'].value) + 1 ;
+backtele();
+}
+function trussg2_3()
+{
+document.forms[0]['trussg2_3'].value = parseInt(document.forms[0]['trussg2_3'].value) + 1 ;
+backtele();
+}
+
+function trussb2_3()
+{
+document.forms[0]['trussb2_3'].value = parseInt(document.forms[0]['trussb2_3'].value) + 1 ;
+backtele();
+}
+
+function trusshpa2_3()
+{
+document.forms[0]['trusshpa2_3'].value = parseInt(document.forms[0]['trusshpa2_3'].value) + 1 ;
+backtele();
+}
+
+function trusshpb2_3()
+{
+document.forms[0]['trusshpb2_3'].value = parseInt(document.forms[0]['trusshpb2_3'].value) + 1 ;
+backtele();
+}
+
+function hloady2_3()
+{
+document.forms[0]['hloady2_3'].value = parseInt(document.forms[0]['hloady2_3'].value) + 1 ;
+backtele();
+}
+
+function hloadn2_3()
+{
+document.forms[0]['hloadn2_3'].value = parseInt(document.forms[0]['hloadn2_3'].value) + 1 ;
+backtele();
+}
+
+function dblock2_3()
+{
+document.forms[0]['dblock2_3'].value = parseInt(document.forms[0]['dblock2_3'].value) + 1 ;
+backtele();
+}
+
+function dhit2_3()
+{
+document.forms[0]['dhit2_3'].value = parseInt(document.forms[0]['dhit2_3'].value) + 1 ;
+backtele();
+}
+
+function assist2_3()
+{
+document.forms[0]['assist2_3'].value = parseInt(document.forms[0]['assist2_3'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 2_4 -->
+<div class="container" id="zone2_4" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-4</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg2_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt2_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa2_4()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb2_4()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg2_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb2_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady2_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn2_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg2_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt2_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock2_4()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit2_4()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist2_4()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 2_4 -->
+<script>
+function highg2_4()
+{
+document.forms[0]['highg2_4'].value = parseInt(document.forms[0]['highg2_4'].value) + 1 ;
+document.forms[0]['highgt2_4'].value = parseInt(document.forms[0]['highgt2_4'].value) + 1 ;
+backtele();
+}
+
+function highgt2_4()
+{
+document.forms[0]['highgt2_4'].value = parseInt(document.forms[0]['highgt2_4'].value) + 1 ;
+backtele();
+}
+
+function shortg2_4()
+{
+document.forms[0]['shortg2_4'].value = parseInt(document.forms[0]['shortg2_4'].value) + 1 ;
+document.forms[0]['shortgt2_4'].value = parseInt(document.forms[0]['shortgt2_4'].value) + 1 ;
+backtele();
+}
+
+function shortgt2_4()
+{
+document.forms[0]['shortgt2_4'].value = parseInt(document.forms[0]['shortgt2_4'].value) + 1 ;
+backtele();
+}
+function trussg2_4()
+{
+document.forms[0]['trussg2_4'].value = parseInt(document.forms[0]['trussg2_4'].value) + 1 ;
+backtele();
+}
+
+function trussb2_4()
+{
+document.forms[0]['trussb2_4'].value = parseInt(document.forms[0]['trussb2_4'].value) + 1 ;
+backtele();
+}
+
+function trusshpa2_4()
+{
+document.forms[0]['trusshpa2_4'].value = parseInt(document.forms[0]['trusshpa2_4'].value) + 1 ;
+backtele();
+}
+
+function trusshpb2_4()
+{
+document.forms[0]['trusshpb2_4'].value = parseInt(document.forms[0]['trusshpb2_4'].value) + 1 ;
+backtele();
+}
+
+function hloady2_4()
+{
+document.forms[0]['hloady2_4'].value = parseInt(document.forms[0]['hloady2_4'].value) + 1 ;
+backtele();
+}
+
+function hloadn2_4()
+{
+document.forms[0]['hloadn2_4'].value = parseInt(document.forms[0]['hloadn2_4'].value) + 1 ;
+backtele();
+}
+
+function dblock2_4()
+{
+document.forms[0]['dblock2_4'].value = parseInt(document.forms[0]['dblock2_4'].value) + 1 ;
+backtele();
+}
+
+function dhit2_4()
+{
+document.forms[0]['dhit2_4'].value = parseInt(document.forms[0]['dhit2_4'].value) + 1 ;
+backtele();
+}
+
+function assist2_4()
+{
+document.forms[0]['assist2_4'].value = parseInt(document.forms[0]['assist2_4'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 2_5 -->
+<div class="container" id="zone2_5" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-5</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg2_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt2_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa2_5()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb2_5()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg2_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb2_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady2_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn2_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg2_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt2_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock2_5()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit2_5()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist2_5()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 2_5 -->
+<script>
+function highg2_5()
+{
+document.forms[0]['highg2_5'].value = parseInt(document.forms[0]['highg2_5'].value) + 1 ;
+document.forms[0]['highgt2_5'].value = parseInt(document.forms[0]['highgt2_5'].value) + 1 ;
+backtele();
+}
+
+function highgt2_5()
+{
+document.forms[0]['highgt2_5'].value = parseInt(document.forms[0]['highgt2_5'].value) + 1 ;
+backtele();
+}
+
+function shortg2_5()
+{
+document.forms[0]['shortg2_5'].value = parseInt(document.forms[0]['shortg2_5'].value) + 1 ;
+document.forms[0]['shortgt2_5'].value = parseInt(document.forms[0]['shortgt2_5'].value) + 1 ;
+backtele();
+}
+
+function shortgt2_5()
+{
+document.forms[0]['shortgt2_5'].value = parseInt(document.forms[0]['shortgt2_5'].value) + 1 ;
+backtele();
+}
+function trussg2_5()
+{
+document.forms[0]['trussg2_5'].value = parseInt(document.forms[0]['trussg2_5'].value) + 1 ;
+backtele();
+}
+
+function trussb2_5()
+{
+document.forms[0]['trussb2_5'].value = parseInt(document.forms[0]['trussb2_5'].value) + 1 ;
+backtele();
+}
+
+function trusshpa2_5()
+{
+document.forms[0]['trusshpa2_5'].value = parseInt(document.forms[0]['trusshpa2_5'].value) + 1 ;
+backtele();
+}
+
+function trusshpb2_5()
+{
+document.forms[0]['trusshpb2_5'].value = parseInt(document.forms[0]['trusshpb2_5'].value) + 1 ;
+backtele();
+}
+
+function hloady2_5()
+{
+document.forms[0]['hloady2_5'].value = parseInt(document.forms[0]['hloady2_5'].value) + 1 ;
+backtele();
+}
+
+function hloadn2_5()
+{
+document.forms[0]['hloadn2_5'].value = parseInt(document.forms[0]['hloadn2_5'].value) + 1 ;
+backtele();
+}
+
+function dblock2_5()
+{
+document.forms[0]['dblock2_5'].value = parseInt(document.forms[0]['dblock2_5'].value) + 1 ;
+backtele();
+}
+
+function dhit2_5()
+{
+document.forms[0]['dhit2_5'].value = parseInt(document.forms[0]['dhit2_5'].value) + 1 ;
+backtele();
+}
+
+function assist2_5()
+{
+document.forms[0]['assist2_5'].value = parseInt(document.forms[0]['assist2_5'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 2_6 -->
+<div class="container" id="zone2_6" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-6</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg2_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt2_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa2_6()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb2_6()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg2_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb2_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady2_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn2_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg2_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt2_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock2_6()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit2_6()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist2_6()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 2_6 -->
+<script>
+function highg2_6()
+{
+document.forms[0]['highg2_6'].value = parseInt(document.forms[0]['highg2_6'].value) + 1 ;
+document.forms[0]['highgt2_6'].value = parseInt(document.forms[0]['highgt2_6'].value) + 1 ;
+backtele();
+}
+
+function highgt2_6()
+{
+document.forms[0]['highgt2_6'].value = parseInt(document.forms[0]['highgt2_6'].value) + 1 ;
+backtele();
+}
+
+function shortg2_6()
+{
+document.forms[0]['shortg2_6'].value = parseInt(document.forms[0]['shortg2_6'].value) + 1 ;
+document.forms[0]['shortgt2_6'].value = parseInt(document.forms[0]['shortgt2_6'].value) + 1 ;
+backtele();
+}
+
+function shortgt2_6()
+{
+document.forms[0]['shortgt2_6'].value = parseInt(document.forms[0]['shortgt2_6'].value) + 1 ;
+backtele();
+}
+function trussg2_6()
+{
+document.forms[0]['trussg2_6'].value = parseInt(document.forms[0]['trussg2_6'].value) + 1 ;
+backtele();
+}
+
+function trussb2_6()
+{
+document.forms[0]['trussb2_6'].value = parseInt(document.forms[0]['trussb2_6'].value) + 1 ;
+backtele();
+}
+
+function trusshpa2_6()
+{
+document.forms[0]['trusshpa2_6'].value = parseInt(document.forms[0]['trusshpa2_6'].value) + 1 ;
+backtele();
+}
+
+function trusshpb2_6()
+{
+document.forms[0]['trusshpb2_6'].value = parseInt(document.forms[0]['trusshpb2_6'].value) + 1 ;
+backtele();
+}
+
+function hloady2_6()
+{
+document.forms[0]['hloady2_6'].value = parseInt(document.forms[0]['hloady2_6'].value) + 1 ;
+backtele();
+}
+
+function hloadn2_6()
+{
+document.forms[0]['hloadn2_6'].value = parseInt(document.forms[0]['hloadn2_6'].value) + 1 ;
+backtele();
+}
+
+function dblock2_6()
+{
+document.forms[0]['dblock2_6'].value = parseInt(document.forms[0]['dblock2_6'].value) + 1 ;
+backtele();
+}
+
+function dhit2_6()
+{
+document.forms[0]['dhit2_6'].value = parseInt(document.forms[0]['dhit2_6'].value) + 1 ;
+backtele();
+}
+
+function assist2_6()
+{
+document.forms[0]['assist2_6'].value = parseInt(document.forms[0]['assist2_6'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 3_1 -->
+<div class="container" id="zone3_1" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-1</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg3_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt3_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa3_1()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb3_1()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg3_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb3_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady3_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn3_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg3_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt3_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock3_1()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit3_1()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist3_1()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 3_1 -->
+<script>
+function highg3_1()
+{
+document.forms[0]['highg3_1'].value = parseInt(document.forms[0]['highg3_1'].value) + 1 ;
+document.forms[0]['highgt3_1'].value = parseInt(document.forms[0]['highgt3_1'].value) + 1 ;
+backtele();
+}
+
+function highgt3_1()
+{
+document.forms[0]['highgt3_1'].value = parseInt(document.forms[0]['highgt3_1'].value) + 1 ;
+backtele();
+}
+
+function shortg3_1()
+{
+document.forms[0]['shortg3_1'].value = parseInt(document.forms[0]['shortg3_1'].value) + 1 ;
+document.forms[0]['shortgt3_1'].value = parseInt(document.forms[0]['shortgt3_1'].value) + 1 ;
+backtele();
+}
+
+function shortgt3_1()
+{
+document.forms[0]['shortgt3_1'].value = parseInt(document.forms[0]['shortgt3_1'].value) + 1 ;
+backtele();
+}
+function trussg3_1()
+{
+document.forms[0]['trussg3_1'].value = parseInt(document.forms[0]['trussg3_1'].value) + 1 ;
+backtele();
+}
+
+function trussb3_1()
+{
+document.forms[0]['trussb3_1'].value = parseInt(document.forms[0]['trussb3_1'].value) + 1 ;
+backtele();
+}
+
+function trusshpa3_1()
+{
+document.forms[0]['trusshpa3_1'].value = parseInt(document.forms[0]['trusshpa3_1'].value) + 1 ;
+backtele();
+}
+
+function trusshpb3_1()
+{
+document.forms[0]['trusshpb3_1'].value = parseInt(document.forms[0]['trusshpb3_1'].value) + 1 ;
+backtele();
+}
+
+function hloady3_1()
+{
+document.forms[0]['hloady3_1'].value = parseInt(document.forms[0]['hloady3_1'].value) + 1 ;
+backtele();
+}
+
+function hloadn3_1()
+{
+document.forms[0]['hloadn3_1'].value = parseInt(document.forms[0]['hloadn3_1'].value) + 1 ;
+backtele();
+}
+
+function dblock3_1()
+{
+document.forms[0]['dblock3_1'].value = parseInt(document.forms[0]['dblock3_1'].value) + 1 ;
+backtele();
+}
+
+function dhit3_1()
+{
+document.forms[0]['dhit3_1'].value = parseInt(document.forms[0]['dhit3_1'].value) + 1 ;
+backtele();
+}
+
+function assist3_1()
+{
+document.forms[0]['assist3_1'].value = parseInt(document.forms[0]['assist3_1'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 3_2 -->
+<div class="container" id="zone3_2" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-2</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg3_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt3_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa3_2()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb3_2()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg3_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb3_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady3_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn3_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg3_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt3_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock3_2()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit3_2()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist3_2()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 3_2 -->
+<script>
+function highg3_2()
+{
+document.forms[0]['highg3_2'].value = parseInt(document.forms[0]['highg3_2'].value) + 1 ;
+document.forms[0]['highgt3_2'].value = parseInt(document.forms[0]['highgt3_2'].value) + 1 ;
+backtele();
+}
+
+function highgt3_2()
+{
+document.forms[0]['highgt3_2'].value = parseInt(document.forms[0]['highgt3_2'].value) + 1 ;
+backtele();
+}
+
+function shortg3_2()
+{
+document.forms[0]['shortg3_2'].value = parseInt(document.forms[0]['shortg3_2'].value) + 1 ;
+document.forms[0]['shortgt3_2'].value = parseInt(document.forms[0]['shortgt3_2'].value) + 1 ;
+backtele();
+}
+
+function shortgt3_2()
+{
+document.forms[0]['shortgt3_2'].value = parseInt(document.forms[0]['shortgt3_2'].value) + 1 ;
+backtele();
+}
+function trussg3_2()
+{
+document.forms[0]['trussg3_2'].value = parseInt(document.forms[0]['trussg3_2'].value) + 1 ;
+backtele();
+}
+
+function trussb3_2()
+{
+document.forms[0]['trussb3_2'].value = parseInt(document.forms[0]['trussb3_2'].value) + 1 ;
+backtele();
+}
+
+function trusshpa3_2()
+{
+document.forms[0]['trusshpa3_2'].value = parseInt(document.forms[0]['trusshpa3_2'].value) + 1 ;
+backtele();
+}
+
+function trusshpb3_2()
+{
+document.forms[0]['trusshpb3_2'].value = parseInt(document.forms[0]['trusshpb3_2'].value) + 1 ;
+backtele();
+}
+
+function hloady3_2()
+{
+document.forms[0]['hloady3_2'].value = parseInt(document.forms[0]['hloady3_2'].value) + 1 ;
+backtele();
+}
+
+function hloadn3_2()
+{
+document.forms[0]['hloadn3_2'].value = parseInt(document.forms[0]['hloadn3_2'].value) + 1 ;
+backtele();
+}
+
+function dblock3_2()
+{
+document.forms[0]['dblock3_2'].value = parseInt(document.forms[0]['dblock3_2'].value) + 1 ;
+backtele();
+}
+
+function dhit3_2()
+{
+document.forms[0]['dhit3_2'].value = parseInt(document.forms[0]['dhit3_2'].value) + 1 ;
+backtele();
+}
+
+function assist3_2()
+{
+document.forms[0]['assist3_2'].value = parseInt(document.forms[0]['assist3_2'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 3_3 -->
+<div class="container" id="zone3_3" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-3</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg3_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt3_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa3_3()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb3_3()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg3_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb3_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady3_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn3_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg3_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt3_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock3_3()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit3_3()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist3_3()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 3_3 -->
+<script>
+function highg3_3()
+{
+document.forms[0]['highg3_3'].value = parseInt(document.forms[0]['highg3_3'].value) + 1 ;
+document.forms[0]['highgt3_3'].value = parseInt(document.forms[0]['highgt3_3'].value) + 1 ;
+backtele();
+}
+
+function highgt3_3()
+{
+document.forms[0]['highgt3_3'].value = parseInt(document.forms[0]['highgt3_3'].value) + 1 ;
+backtele();
+}
+
+function shortg3_3()
+{
+document.forms[0]['shortg3_3'].value = parseInt(document.forms[0]['shortg3_3'].value) + 1 ;
+document.forms[0]['shortgt3_3'].value = parseInt(document.forms[0]['shortgt3_3'].value) + 1 ;
+backtele();
+}
+
+function shortgt3_3()
+{
+document.forms[0]['shortgt3_3'].value = parseInt(document.forms[0]['shortgt3_3'].value) + 1 ;
+backtele();
+}
+function trussg3_3()
+{
+document.forms[0]['trussg3_3'].value = parseInt(document.forms[0]['trussg3_3'].value) + 1 ;
+backtele();
+}
+
+function trussb3_3()
+{
+document.forms[0]['trussb3_3'].value = parseInt(document.forms[0]['trussb3_3'].value) + 1 ;
+backtele();
+}
+
+function trusshpa3_3()
+{
+document.forms[0]['trusshpa3_3'].value = parseInt(document.forms[0]['trusshpa3_3'].value) + 1 ;
+backtele();
+}
+
+function trusshpb3_3()
+{
+document.forms[0]['trusshpb3_3'].value = parseInt(document.forms[0]['trusshpb3_3'].value) + 1 ;
+backtele();
+}
+
+function hloady3_3()
+{
+document.forms[0]['hloady3_3'].value = parseInt(document.forms[0]['hloady3_3'].value) + 1 ;
+backtele();
+}
+
+function hloadn3_3()
+{
+document.forms[0]['hloadn3_3'].value = parseInt(document.forms[0]['hloadn3_3'].value) + 1 ;
+backtele();
+}
+
+function dblock3_3()
+{
+document.forms[0]['dblock3_3'].value = parseInt(document.forms[0]['dblock3_3'].value) + 1 ;
+backtele();
+}
+
+function dhit3_3()
+{
+document.forms[0]['dhit3_3'].value = parseInt(document.forms[0]['dhit3_3'].value) + 1 ;
+backtele();
+}
+
+function assist3_3()
+{
+document.forms[0]['assist3_3'].value = parseInt(document.forms[0]['assist3_3'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 3_4 -->
+<div class="container" id="zone3_4" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-4</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg3_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt3_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa3_4()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb3_4()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg3_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb3_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady3_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn3_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg3_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt3_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock3_4()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit3_4()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist3_4()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 3_4 -->
+<script>
+function highg3_4()
+{
+document.forms[0]['highg3_4'].value = parseInt(document.forms[0]['highg3_4'].value) + 1 ;
+document.forms[0]['highgt3_4'].value = parseInt(document.forms[0]['highgt3_4'].value) + 1 ;
+backtele();
+}
+
+function highgt3_4()
+{
+document.forms[0]['highgt3_4'].value = parseInt(document.forms[0]['highgt3_4'].value) + 1 ;
+backtele();
+}
+
+function shortg3_4()
+{
+document.forms[0]['shortg3_4'].value = parseInt(document.forms[0]['shortg3_4'].value) + 1 ;
+document.forms[0]['shortgt3_4'].value = parseInt(document.forms[0]['shortgt3_4'].value) + 1 ;
+backtele();
+}
+
+function shortgt3_4()
+{
+document.forms[0]['shortgt3_4'].value = parseInt(document.forms[0]['shortgt3_4'].value) + 1 ;
+backtele();
+}
+function trussg3_4()
+{
+document.forms[0]['trussg3_4'].value = parseInt(document.forms[0]['trussg3_4'].value) + 1 ;
+backtele();
+}
+
+function trussb3_4()
+{
+document.forms[0]['trussb3_4'].value = parseInt(document.forms[0]['trussb3_4'].value) + 1 ;
+backtele();
+}
+
+function trusshpa3_4()
+{
+document.forms[0]['trusshpa3_4'].value = parseInt(document.forms[0]['trusshpa3_4'].value) + 1 ;
+backtele();
+}
+
+function trusshpb3_4()
+{
+document.forms[0]['trusshpb3_4'].value = parseInt(document.forms[0]['trusshpb3_4'].value) + 1 ;
+backtele();
+}
+
+function hloady3_4()
+{
+document.forms[0]['hloady3_4'].value = parseInt(document.forms[0]['hloady3_4'].value) + 1 ;
+backtele();
+}
+
+function hloadn3_4()
+{
+document.forms[0]['hloadn3_4'].value = parseInt(document.forms[0]['hloadn3_4'].value) + 1 ;
+backtele();
+}
+
+function dblock3_4()
+{
+document.forms[0]['dblock3_4'].value = parseInt(document.forms[0]['dblock3_4'].value) + 1 ;
+backtele();
+}
+
+function dhit3_4()
+{
+document.forms[0]['dhit3_4'].value = parseInt(document.forms[0]['dhit3_4'].value) + 1 ;
+backtele();
+}
+
+function assist3_4()
+{
+document.forms[0]['assist3_4'].value = parseInt(document.forms[0]['assist3_4'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 3_5 -->
+<div class="container" id="zone3_5" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-5</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg3_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt3_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa3_5()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb3_5()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg3_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb3_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady3_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn3_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg3_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt3_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock3_5()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit3_5()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist3_5()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 3_5 -->
+<script>
+function highg3_5()
+{
+document.forms[0]['highg3_5'].value = parseInt(document.forms[0]['highg3_5'].value) + 1 ;
+document.forms[0]['highgt3_5'].value = parseInt(document.forms[0]['highgt3_5'].value) + 1 ;
+backtele();
+}
+
+function highgt3_5()
+{
+document.forms[0]['highgt3_5'].value = parseInt(document.forms[0]['highgt3_5'].value) + 1 ;
+backtele();
+}
+
+function shortg3_5()
+{
+document.forms[0]['shortg3_5'].value = parseInt(document.forms[0]['shortg3_5'].value) + 1 ;
+document.forms[0]['shortgt3_5'].value = parseInt(document.forms[0]['shortgt3_5'].value) + 1 ;
+backtele();
+}
+
+function shortgt3_5()
+{
+document.forms[0]['shortgt3_5'].value = parseInt(document.forms[0]['shortgt3_5'].value) + 1 ;
+backtele();
+}
+function trussg3_5()
+{
+document.forms[0]['trussg3_5'].value = parseInt(document.forms[0]['trussg3_5'].value) + 1 ;
+backtele();
+}
+
+function trussb3_5()
+{
+document.forms[0]['trussb3_5'].value = parseInt(document.forms[0]['trussb3_5'].value) + 1 ;
+backtele();
+}
+
+function trusshpa3_5()
+{
+document.forms[0]['trusshpa3_5'].value = parseInt(document.forms[0]['trusshpa3_5'].value) + 1 ;
+backtele();
+}
+
+function trusshpb3_5()
+{
+document.forms[0]['trusshpb3_5'].value = parseInt(document.forms[0]['trusshpb3_5'].value) + 1 ;
+backtele();
+}
+
+function hloady3_5()
+{
+document.forms[0]['hloady3_5'].value = parseInt(document.forms[0]['hloady3_5'].value) + 1 ;
+backtele();
+}
+
+function hloadn3_5()
+{
+document.forms[0]['hloadn3_5'].value = parseInt(document.forms[0]['hloadn3_5'].value) + 1 ;
+backtele();
+}
+
+function dblock3_5()
+{
+document.forms[0]['dblock3_5'].value = parseInt(document.forms[0]['dblock3_5'].value) + 1 ;
+backtele();
+}
+
+function dhit3_5()
+{
+document.forms[0]['dhit3_5'].value = parseInt(document.forms[0]['dhit3_5'].value) + 1 ;
+backtele();
+}
+
+function assist3_5()
+{
+document.forms[0]['assist3_5'].value = parseInt(document.forms[0]['assist3_5'].value) + 1 ;
+backtele();
+}
+</script>
+
+<!-- zone 3_6 -->
+<div class="container" id="zone3_6" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backtele()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-6</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-4">
+		<!-- High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button"onclick="highg3_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="highgt3_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Truss to human -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss To HP<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trusshpa3_6()"><h2>&nbsp;&nbsp;A&nbsp&nbsp;</h2></button>
+    				<button class="btn btn-info" type="button" onclick="trusshpb3_6()"><h2>&nbsp;&nbsp;B&nbsp&nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+
+	<div class="col-lg-4">
+		<!-- truss -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Truss</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="trussg3_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="trussb3_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- human load -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Human Load<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="hloady3_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></i></button>
+    				<button class="btn btn-danger" type="button" onclick="hloadn3_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+<div class="col-lg-4">
+		<!-- Short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="shortg3_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="shortgt3_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		<!-- Defense -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Defense<center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="dblock3_6()"><h2>Block</h2></button>
+    				<button class="btn btn-info" type="button" onclick="dhit3_6()"><h2>Hit</h2></button>
+  			</div>
+		</div>
+
+	</div>
+
+	<center><button class="btn btn-info" type="button" onclick="assist3_6()"><h2>Assist</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for 3_6 -->
+<script>
+function highg3_6()
+{
+document.forms[0]['highg3_6'].value = parseInt(document.forms[0]['highg3_6'].value) + 1 ;
+document.forms[0]['highgt3_6'].value = parseInt(document.forms[0]['highgt3_6'].value) + 1 ;
+backtele();
+}
+
+function highgt3_6()
+{
+document.forms[0]['highgt3_6'].value = parseInt(document.forms[0]['highgt3_6'].value) + 1 ;
+backtele();
+}
+
+function shortg3_6()
+{
+document.forms[0]['shortg3_6'].value = parseInt(document.forms[0]['shortg3_6'].value) + 1 ;
+document.forms[0]['shortgt3_6'].value = parseInt(document.forms[0]['shortgt3_6'].value) + 1 ;
+backtele();
+}
+
+function shortgt3_6()
+{
+document.forms[0]['shortgt3_6'].value = parseInt(document.forms[0]['shortgt3_6'].value) + 1 ;
+backtele();
+}
+function trussg3_6()
+{
+document.forms[0]['trussg3_6'].value = parseInt(document.forms[0]['trussg3_6'].value) + 1 ;
+backtele();
+}
+
+function trussb3_6()
+{
+document.forms[0]['trussb3_6'].value = parseInt(document.forms[0]['trussb3_6'].value) + 1 ;
+backtele();
+}
+
+function trusshpa3_6()
+{
+document.forms[0]['trusshpa3_6'].value = parseInt(document.forms[0]['trusshpa3_6'].value) + 1 ;
+backtele();
+}
+
+function trusshpb3_6()
+{
+document.forms[0]['trusshpb3_6'].value = parseInt(document.forms[0]['trusshpb3_6'].value) + 1 ;
+backtele();
+}
+
+function hloady3_6()
+{
+document.forms[0]['hloady3_6'].value = parseInt(document.forms[0]['hloady3_6'].value) + 1 ;
+backtele();
+}
+
+function hloadn3_6()
+{
+document.forms[0]['hloadn3_6'].value = parseInt(document.forms[0]['hloadn3_6'].value) + 1 ;
+backtele();
+}
+
+function dblock3_6()
+{
+document.forms[0]['dblock3_6'].value = parseInt(document.forms[0]['dblock3_6'].value) + 1 ;
+backtele();
+}
+
+function dhit3_6()
+{
+document.forms[0]['dhit3_6'].value = parseInt(document.forms[0]['dhit3_6'].value) + 1 ;
+backtele();
+}
+
+function assist3_6()
+{
+document.forms[0]['assist3_6'].value = parseInt(document.forms[0]['assist3_6'].value) + 1 ;
+backtele();
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- auto zone display and scripting -->
+<!-- auto zone 1_1 -->
+<div class="container" id="autozone1_1" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-1</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg1_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt1_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg1_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt1_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove1_1()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 1_1 -->
+<script>
+function autohighg1_1()
+{
+document.forms[0]['autohighg1_1'].value = parseInt(document.forms[0]['autohighg1_1'].value) + 1 ;
+document.forms[0]['autohighgt1_1'].value = parseInt(document.forms[0]['autohighgt1_1'].value) + 1 ;
+backauto();
+}
+
+function autohighgt1_1()
+{
+document.forms[0]['autohighgt1_1'].value = parseInt(document.forms[0]['autohighgt1_1'].value) + 1 ;
+backauto();
+}
+
+function autoshortg1_1()
+{
+document.forms[0]['autoshortg1_1'].value = parseInt(document.forms[0]['autoshortg1_1'].value) + 1 ;
+document.forms[0]['autoshortgt1_1'].value = parseInt(document.forms[0]['autoshortgt1_1'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt1_1()
+{
+document.forms[0]['autoshortgt1_1'].value = parseInt(document.forms[0]['autoshortgt1_1'].value) + 1 ;
+backauto();
+}
+
+function automove1_1()
+{
+document.forms[0]['automove1_1'].value = parseInt(document.forms[0]['automove1_1'].value) + 1 ;
+backauto();
+}
+</script>
+
+
+<!-- auto zone 1_2 -->
+<div class="container" id="autozone1_2" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-2</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg1_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt1_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg1_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt1_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove1_2()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 1_2 -->
+<script>
+function autohighg1_2()
+{
+document.forms[0]['autohighg1_2'].value = parseInt(document.forms[0]['autohighg1_2'].value) + 1 ;
+document.forms[0]['autohighgt1_2'].value = parseInt(document.forms[0]['autohighgt1_2'].value) + 1 ;
+backauto();
+}
+
+function autohighgt1_2()
+{
+document.forms[0]['autohighgt1_2'].value = parseInt(document.forms[0]['autohighgt1_2'].value) + 1 ;
+backauto();
+}
+
+function autoshortg1_2()
+{
+document.forms[0]['autoshortg1_2'].value = parseInt(document.forms[0]['autoshortg1_2'].value) + 1 ;
+document.forms[0]['autoshortgt1_2'].value = parseInt(document.forms[0]['autoshortgt1_2'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt1_2()
+{
+document.forms[0]['autoshortgt1_2'].value = parseInt(document.forms[0]['autoshortgt1_2'].value) + 1 ;
+backauto();
+}
+
+function automove1_2()
+{
+document.forms[0]['automove1_2'].value = parseInt(document.forms[0]['automove1_2'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 1_3 -->
+<div class="container" id="autozone1_3" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-3</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg1_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt1_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg1_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt1_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove1_3()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 1_3 -->
+<script>
+function autohighg1_3()
+{
+document.forms[0]['autohighg1_3'].value = parseInt(document.forms[0]['autohighg1_3'].value) + 1 ;
+document.forms[0]['autohighgt1_3'].value = parseInt(document.forms[0]['autohighgt1_3'].value) + 1 ;
+backauto();
+}
+
+function autohighgt1_3()
+{
+document.forms[0]['autohighgt1_3'].value = parseInt(document.forms[0]['autohighgt1_3'].value) + 1 ;
+backauto();
+}
+
+function autoshortg1_3()
+{
+document.forms[0]['autoshortg1_3'].value = parseInt(document.forms[0]['autoshortg1_3'].value) + 1 ;
+document.forms[0]['autoshortgt1_3'].value = parseInt(document.forms[0]['autoshortgt1_3'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt1_3()
+{
+document.forms[0]['autoshortgt1_3'].value = parseInt(document.forms[0]['autoshortgt1_3'].value) + 1 ;
+backauto();
+}
+
+function automove1_3()
+{
+document.forms[0]['automove1_3'].value = parseInt(document.forms[0]['automove1_3'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 1_4 -->
+<div class="container" id="autozone1_4" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-4</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg1_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt1_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg1_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt1_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove1_4()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 1_4 -->
+<script>
+function autohighg1_4()
+{
+document.forms[0]['autohighg1_4'].value = parseInt(document.forms[0]['autohighg1_4'].value) + 1 ;
+document.forms[0]['autohighgt1_4'].value = parseInt(document.forms[0]['autohighgt1_4'].value) + 1 ;
+backauto();
+}
+
+function autohighgt1_4()
+{
+document.forms[0]['autohighgt1_4'].value = parseInt(document.forms[0]['autohighgt1_4'].value) + 1 ;
+backauto();
+}
+
+function autoshortg1_4()
+{
+document.forms[0]['autoshortg1_4'].value = parseInt(document.forms[0]['autoshortg1_4'].value) + 1 ;
+document.forms[0]['autoshortgt1_4'].value = parseInt(document.forms[0]['autoshortgt1_4'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt1_4()
+{
+document.forms[0]['autoshortgt1_4'].value = parseInt(document.forms[0]['autoshortgt1_4'].value) + 1 ;
+backauto();
+}
+
+function automove1_4()
+{
+document.forms[0]['automove1_4'].value = parseInt(document.forms[0]['automove1_4'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 1_5 -->
+<div class="container" id="autozone1_5" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-5</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg1_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt1_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg1_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt1_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove1_5()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 1_5 -->
+<script>
+function autohighg1_5()
+{
+document.forms[0]['autohighg1_5'].value = parseInt(document.forms[0]['autohighg1_5'].value) + 1 ;
+document.forms[0]['autohighgt1_5'].value = parseInt(document.forms[0]['autohighgt1_5'].value) + 1 ;
+backauto();
+}
+
+function autohighgt1_5()
+{
+document.forms[0]['autohighgt1_5'].value = parseInt(document.forms[0]['autohighgt1_5'].value) + 1 ;
+backauto();
+}
+
+function autoshortg1_5()
+{
+document.forms[0]['autoshortg1_5'].value = parseInt(document.forms[0]['autoshortg1_5'].value) + 1 ;
+document.forms[0]['autoshortgt1_5'].value = parseInt(document.forms[0]['autoshortgt1_5'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt1_5()
+{
+document.forms[0]['autoshortgt1_5'].value = parseInt(document.forms[0]['autoshortgt1_5'].value) + 1 ;
+backauto();
+}
+
+function automove1_5()
+{
+document.forms[0]['automove1_5'].value = parseInt(document.forms[0]['automove1_5'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 1_6 -->
+<div class="container" id="autozone1_6" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 1-6</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg1_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt1_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg1_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt1_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove1_6()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 1_6 -->
+<script>
+function autohighg1_6()
+{
+document.forms[0]['autohighg1_6'].value = parseInt(document.forms[0]['autohighg1_6'].value) + 1 ;
+document.forms[0]['autohighgt1_6'].value = parseInt(document.forms[0]['autohighgt1_6'].value) + 1 ;
+backauto();
+}
+
+function autohighgt1_6()
+{
+document.forms[0]['autohighgt1_6'].value = parseInt(document.forms[0]['autohighgt1_6'].value) + 1 ;
+backauto();
+}
+
+function autoshortg1_6()
+{
+document.forms[0]['autoshortg1_6'].value = parseInt(document.forms[0]['autoshortg1_6'].value) + 1 ;
+document.forms[0]['autoshortgt1_6'].value = parseInt(document.forms[0]['autoshortgt1_6'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt1_6()
+{
+document.forms[0]['autoshortgt1_6'].value = parseInt(document.forms[0]['autoshortgt1_6'].value) + 1 ;
+backauto();
+}
+
+function automove1_6()
+{
+document.forms[0]['automove1_6'].value = parseInt(document.forms[0]['automove1_6'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 2_1 -->
+<div class="container" id="autozone2_1" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-1</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg2_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt2_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg2_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt2_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove2_1()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 2_1 -->
+<script>
+function autohighg2_1()
+{
+document.forms[0]['autohighg2_1'].value = parseInt(document.forms[0]['autohighg2_1'].value) + 1 ;
+document.forms[0]['autohighgt2_1'].value = parseInt(document.forms[0]['autohighgt2_1'].value) + 1 ;
+backauto();
+}
+
+function autohighgt2_1()
+{
+document.forms[0]['autohighgt2_1'].value = parseInt(document.forms[0]['autohighgt2_1'].value) + 1 ;
+backauto();
+}
+
+function autoshortg2_1()
+{
+document.forms[0]['autoshortg2_1'].value = parseInt(document.forms[0]['autoshortg2_1'].value) + 1 ;
+document.forms[0]['autoshortgt2_1'].value = parseInt(document.forms[0]['autoshortgt2_1'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt2_1()
+{
+document.forms[0]['autoshortgt2_1'].value = parseInt(document.forms[0]['autoshortgt2_1'].value) + 1 ;
+backauto();
+}
+
+function automove2_1()
+{
+document.forms[0]['automove2_1'].value = parseInt(document.forms[0]['automove2_1'].value) + 1 ;
+backauto();
+}
+</script>
+
+
+<!-- auto zone 2_2 -->
+<div class="container" id="autozone2_2" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-2</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg2_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt2_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg2_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt2_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove2_2()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 2_2 -->
+<script>
+function autohighg2_2()
+{
+document.forms[0]['autohighg2_2'].value = parseInt(document.forms[0]['autohighg2_2'].value) + 1 ;
+document.forms[0]['autohighgt2_2'].value = parseInt(document.forms[0]['autohighgt2_2'].value) + 1 ;
+backauto();
+}
+
+function autohighgt2_2()
+{
+document.forms[0]['autohighgt2_2'].value = parseInt(document.forms[0]['autohighgt2_2'].value) + 1 ;
+backauto();
+}
+
+function autoshortg2_2()
+{
+document.forms[0]['autoshortg2_2'].value = parseInt(document.forms[0]['autoshortg2_2'].value) + 1 ;
+document.forms[0]['autoshortgt2_2'].value = parseInt(document.forms[0]['autoshortgt2_2'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt2_2()
+{
+document.forms[0]['autoshortgt2_2'].value = parseInt(document.forms[0]['autoshortgt2_2'].value) + 1 ;
+backauto();
+}
+
+function automove2_2()
+{
+document.forms[0]['automove2_2'].value = parseInt(document.forms[0]['automove2_2'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 2_3 -->
+<div class="container" id="autozone2_3" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-3</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg2_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt2_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg2_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt2_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove2_3()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 2_3 -->
+<script>
+function autohighg2_3()
+{
+document.forms[0]['autohighg2_3'].value = parseInt(document.forms[0]['autohighg2_3'].value) + 1 ;
+document.forms[0]['autohighgt2_3'].value = parseInt(document.forms[0]['autohighgt2_3'].value) + 1 ;
+backauto();
+}
+
+function autohighgt2_3()
+{
+document.forms[0]['autohighgt2_3'].value = parseInt(document.forms[0]['autohighgt2_3'].value) + 1 ;
+backauto();
+}
+
+function autoshortg2_3()
+{
+document.forms[0]['autoshortg2_3'].value = parseInt(document.forms[0]['autoshortg2_3'].value) + 1 ;
+document.forms[0]['autoshortgt2_3'].value = parseInt(document.forms[0]['autoshortgt2_3'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt2_3()
+{
+document.forms[0]['autoshortgt2_3'].value = parseInt(document.forms[0]['autoshortgt2_3'].value) + 1 ;
+backauto();
+}
+
+function automove2_3()
+{
+document.forms[0]['automove2_3'].value = parseInt(document.forms[0]['automove2_3'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 2_4 -->
+<div class="container" id="autozone2_4" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-4</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg2_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt2_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg2_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt2_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove2_4()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 2_4 -->
+<script>
+function autohighg2_4()
+{
+document.forms[0]['autohighg2_4'].value = parseInt(document.forms[0]['autohighg2_4'].value) + 1 ;
+document.forms[0]['autohighgt2_4'].value = parseInt(document.forms[0]['autohighgt2_4'].value) + 1 ;
+backauto();
+}
+
+function autohighgt2_4()
+{
+document.forms[0]['autohighgt2_4'].value = parseInt(document.forms[0]['autohighgt2_4'].value) + 1 ;
+backauto();
+}
+
+function autoshortg2_4()
+{
+document.forms[0]['autoshortg2_4'].value = parseInt(document.forms[0]['autoshortg2_4'].value) + 1 ;
+document.forms[0]['autoshortgt2_4'].value = parseInt(document.forms[0]['autoshortgt2_4'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt2_4()
+{
+document.forms[0]['autoshortgt2_4'].value = parseInt(document.forms[0]['autoshortgt2_4'].value) + 1 ;
+backauto();
+}
+
+function automove2_4()
+{
+document.forms[0]['automove2_4'].value = parseInt(document.forms[0]['automove2_4'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 2_5 -->
+<div class="container" id="autozone2_5" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-5</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg2_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt2_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg2_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt2_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove2_5()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 2_5 -->
+<script>
+function autohighg2_5()
+{
+document.forms[0]['autohighg2_5'].value = parseInt(document.forms[0]['autohighg2_5'].value) + 1 ;
+document.forms[0]['autohighgt2_5'].value = parseInt(document.forms[0]['autohighgt2_5'].value) + 1 ;
+backauto();
+}
+
+function autohighgt2_5()
+{
+document.forms[0]['autohighgt2_5'].value = parseInt(document.forms[0]['autohighgt2_5'].value) + 1 ;
+backauto();
+}
+
+function autoshortg2_5()
+{
+document.forms[0]['autoshortg2_5'].value = parseInt(document.forms[0]['autoshortg2_5'].value) + 1 ;
+document.forms[0]['autoshortgt2_5'].value = parseInt(document.forms[0]['autoshortgt2_5'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt2_5()
+{
+document.forms[0]['autoshortgt2_5'].value = parseInt(document.forms[0]['autoshortgt2_5'].value) + 1 ;
+backauto();
+}
+
+function automove2_5()
+{
+document.forms[0]['automove2_5'].value = parseInt(document.forms[0]['automove2_5'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 2_6 -->
+<div class="container" id="autozone2_6" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 2-6</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg2_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt2_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg2_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt2_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove2_6()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 2_6 -->
+<script>
+function autohighg2_6()
+{
+document.forms[0]['autohighg2_6'].value = parseInt(document.forms[0]['autohighg2_6'].value) + 1 ;
+document.forms[0]['autohighgt2_6'].value = parseInt(document.forms[0]['autohighgt2_6'].value) + 1 ;
+backauto();
+}
+
+function autohighgt2_6()
+{
+document.forms[0]['autohighgt2_6'].value = parseInt(document.forms[0]['autohighgt2_6'].value) + 1 ;
+backauto();
+}
+
+function autoshortg2_6()
+{
+document.forms[0]['autoshortg2_6'].value = parseInt(document.forms[0]['autoshortg2_6'].value) + 1 ;
+document.forms[0]['autoshortgt2_6'].value = parseInt(document.forms[0]['autoshortgt2_6'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt2_6()
+{
+document.forms[0]['autoshortgt2_6'].value = parseInt(document.forms[0]['autoshortgt2_6'].value) + 1 ;
+backauto();
+}
+
+function automove2_6()
+{
+document.forms[0]['automove2_6'].value = parseInt(document.forms[0]['automove2_6'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 3_1 -->
+<div class="container" id="autozone3_1" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-1</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg3_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt3_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg3_1()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt3_1()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove3_1()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 3_1 -->
+<script>
+function autohighg3_1()
+{
+document.forms[0]['autohighg3_1'].value = parseInt(document.forms[0]['autohighg3_1'].value) + 1 ;
+document.forms[0]['autohighgt3_1'].value = parseInt(document.forms[0]['autohighgt3_1'].value) + 1 ;
+backauto();
+}
+
+function autohighgt3_1()
+{
+document.forms[0]['autohighgt3_1'].value = parseInt(document.forms[0]['autohighgt3_1'].value) + 1 ;
+backauto();
+}
+
+function autoshortg3_1()
+{
+document.forms[0]['autoshortg3_1'].value = parseInt(document.forms[0]['autoshortg3_1'].value) + 1 ;
+document.forms[0]['autoshortgt3_1'].value = parseInt(document.forms[0]['autoshortgt3_1'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt3_1()
+{
+document.forms[0]['autoshortgt3_1'].value = parseInt(document.forms[0]['autoshortgt3_1'].value) + 1 ;
+backauto();
+}
+
+function automove3_1()
+{
+document.forms[0]['automove3_1'].value = parseInt(document.forms[0]['automove3_1'].value) + 1 ;
+backauto();
+}
+</script>
+
+
+<!-- auto zone 3_2 -->
+<div class="container" id="autozone3_2" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-2</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg3_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt3_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg3_2()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt3_2()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove3_2()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 3_2 -->
+<script>
+function autohighg3_2()
+{
+document.forms[0]['autohighg3_2'].value = parseInt(document.forms[0]['autohighg3_2'].value) + 1 ;
+document.forms[0]['autohighgt3_2'].value = parseInt(document.forms[0]['autohighgt3_2'].value) + 1 ;
+backauto();
+}
+
+function autohighgt3_2()
+{
+document.forms[0]['autohighgt3_2'].value = parseInt(document.forms[0]['autohighgt3_2'].value) + 1 ;
+backauto();
+}
+
+function autoshortg3_2()
+{
+document.forms[0]['autoshortg3_2'].value = parseInt(document.forms[0]['autoshortg3_2'].value) + 1 ;
+document.forms[0]['autoshortgt3_2'].value = parseInt(document.forms[0]['autoshortgt3_2'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt3_2()
+{
+document.forms[0]['autoshortgt3_2'].value = parseInt(document.forms[0]['autoshortgt3_2'].value) + 1 ;
+backauto();
+}
+
+function automove3_2()
+{
+document.forms[0]['automove3_2'].value = parseInt(document.forms[0]['automove3_2'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 3_3 -->
+<div class="container" id="autozone3_3" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-3</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg3_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt3_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg3_3()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt3_3()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove3_3()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 3_3 -->
+<script>
+function autohighg3_3()
+{
+document.forms[0]['autohighg3_3'].value = parseInt(document.forms[0]['autohighg3_3'].value) + 1 ;
+document.forms[0]['autohighgt3_3'].value = parseInt(document.forms[0]['autohighgt3_3'].value) + 1 ;
+backauto();
+}
+
+function autohighgt3_3()
+{
+document.forms[0]['autohighgt3_3'].value = parseInt(document.forms[0]['autohighgt3_3'].value) + 1 ;
+backauto();
+}
+
+function autoshortg3_3()
+{
+document.forms[0]['autoshortg3_3'].value = parseInt(document.forms[0]['autoshortg3_3'].value) + 1 ;
+document.forms[0]['autoshortgt3_3'].value = parseInt(document.forms[0]['autoshortgt3_3'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt3_3()
+{
+document.forms[0]['autoshortgt3_3'].value = parseInt(document.forms[0]['autoshortgt3_3'].value) + 1 ;
+backauto();
+}
+
+function automove3_3()
+{
+document.forms[0]['automove3_3'].value = parseInt(document.forms[0]['automove3_3'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 3_4 -->
+<div class="container" id="autozone3_4" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-4</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg3_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt3_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg3_4()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt3_4()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove3_4()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 3_4 -->
+<script>
+function autohighg3_4()
+{
+document.forms[0]['autohighg3_4'].value = parseInt(document.forms[0]['autohighg3_4'].value) + 1 ;
+document.forms[0]['autohighgt3_4'].value = parseInt(document.forms[0]['autohighgt3_4'].value) + 1 ;
+backauto();
+}
+
+function autohighgt3_4()
+{
+document.forms[0]['autohighgt3_4'].value = parseInt(document.forms[0]['autohighgt3_4'].value) + 1 ;
+backauto();
+}
+
+function autoshortg3_4()
+{
+document.forms[0]['autoshortg3_4'].value = parseInt(document.forms[0]['autoshortg3_4'].value) + 1 ;
+document.forms[0]['autoshortgt3_4'].value = parseInt(document.forms[0]['autoshortgt3_4'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt3_4()
+{
+document.forms[0]['autoshortgt3_4'].value = parseInt(document.forms[0]['autoshortgt3_4'].value) + 1 ;
+backauto();
+}
+
+function automove3_4()
+{
+document.forms[0]['automove3_4'].value = parseInt(document.forms[0]['automove3_4'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 3_5 -->
+<div class="container" id="autozone3_5" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-5</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg3_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt3_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg3_5()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt3_5()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove3_5()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 3_5 -->
+<script>
+function autohighg3_5()
+{
+document.forms[0]['autohighg3_5'].value = parseInt(document.forms[0]['autohighg3_5'].value) + 1 ;
+document.forms[0]['autohighgt3_5'].value = parseInt(document.forms[0]['autohighgt3_5'].value) + 1 ;
+backauto();
+}
+
+function autohighgt3_5()
+{
+document.forms[0]['autohighgt3_5'].value = parseInt(document.forms[0]['autohighgt3_5'].value) + 1 ;
+backauto();
+}
+
+function autoshortg3_5()
+{
+document.forms[0]['autoshortg3_5'].value = parseInt(document.forms[0]['autoshortg3_5'].value) + 1 ;
+document.forms[0]['autoshortgt3_5'].value = parseInt(document.forms[0]['autoshortgt3_5'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt3_5()
+{
+document.forms[0]['autoshortgt3_5'].value = parseInt(document.forms[0]['autoshortgt3_5'].value) + 1 ;
+backauto();
+}
+
+function automove3_5()
+{
+document.forms[0]['automove3_5'].value = parseInt(document.forms[0]['automove3_5'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- auto zone 3_6 -->
+<div class="container" id="autozone3_6" style="DISPLAY: none">
+<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="backauto()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title"><center>Zone: 3-6</center></h3>
+      </div>
+	<div class="bs-docs-section">
+<div class="jumbotron">
+<center>
+<div class="row">
+	<div class="col-lg-6">
+		<!-- auto High Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>High Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autohighg3_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autohighgt3_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+	<div class="col-lg-6">
+		<!-- auto short Goal -->
+		<div class="panel panel-primary">
+  			<div class="panel-heading">
+    				<h2><center>Low Goal</center></h2>
+  			</div>
+  			<div class="panel-body">
+    				<button class="btn btn-success" type="button" onclick="autoshortg3_6()"><h2>&nbsp; <i class="fa fa-check"></i> &nbsp;</h2></button>
+    				<button class="btn btn-danger" type="button" onclick="autoshortgt3_6()"><h2>&nbsp; <i class="fa fa-times"></i> &nbsp;</h2></button>
+  			</div>
+		</div>
+
+		
+
+	</div>
+
+
+
+	<center><button class="btn btn-info" type="button" onclick="automove3_6()"><h2>Move</h2></button></center>
+	
+	
+	</div>
+	</div>
+	</div>
+</div>
+
+
+
+<!-- button actions for auto 3_6 -->
+<script>
+function autohighg3_6()
+{
+document.forms[0]['autohighg3_6'].value = parseInt(document.forms[0]['autohighg3_6'].value) + 1 ;
+document.forms[0]['autohighgt3_6'].value = parseInt(document.forms[0]['autohighgt3_6'].value) + 1 ;
+backauto();
+}
+
+function autohighgt3_6()
+{
+document.forms[0]['autohighgt3_6'].value = parseInt(document.forms[0]['autohighgt3_6'].value) + 1 ;
+backauto();
+}
+
+function autoshortg3_6()
+{
+document.forms[0]['autoshortg3_6'].value = parseInt(document.forms[0]['autoshortg3_6'].value) + 1 ;
+document.forms[0]['autoshortgt3_6'].value = parseInt(document.forms[0]['autoshortgt3_6'].value) + 1 ;
+backauto();
+}
+
+function autoshortgt3_6()
+{
+document.forms[0]['autoshortgt3_6'].value = parseInt(document.forms[0]['autoshortgt3_6'].value) + 1 ;
+backauto();
+}
+
+function automove3_6()
+{
+document.forms[0]['automove3_6'].value = parseInt(document.forms[0]['automove3_6'].value) + 1 ;
+backauto();
+}
+</script>
+
+<!-- comments field   bookmark2 -->
+<center>
+
+<textarea type="text" class="form-control" style="width:50%" placeholder="Comments" id="commentsbox" onchange="comments()" ></textarea>
+</center>
+
+<script>
+function comments()
+{
+document.getElementById("comments").value = document.getElementById("commentsbox").value;
+
+}
+</script>
+
+
+
+
+
+
+
+
+<script>
+function update()
+{
+localStorage.matchnum = document.getElementById("matchid").value;
+localStorage.zone = document.getElementById("robot").value;
+}
+</script>
+
+<!-- this has to be the last script to run -->
+<script>
+//add +1 to the match number
+localStorage.matchnum = Number(localStorage.matchnum)+1;
+//display the stored match value into the match field
+document.getElementById("matchid").value = localStorage.matchnum;
+
+document.getElementById("robot").value = localStorage.zone;
+
+ 
+getteam(document.getElementById("matchid").value);
+</script>
+</span>
+</body>
+</html>
